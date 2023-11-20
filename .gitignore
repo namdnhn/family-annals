@@ -1,3 +1,5 @@
 ff-env/
 __pycache__/
 .env
+
+app/node_modules
