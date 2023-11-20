@@ -17,7 +17,7 @@ router.put(
             .custom(async (value, { req }) => {
                 const userDoc = await Users.findOne({ email: value });
                 if (userDoc) {
-                    throw new Error("Email address already exists");
+                    throw new Error("Email đã tồn tại!");
                 }
             })
             .normalizeEmail(),

@@ -9,6 +9,7 @@ const dbURI = process.env.DB_CONNECT;
 
 //routes
 const authRoutes = require("./routes/auth");
+const familyRoutes = require("./routes/family");
 
 const app = express();
 
@@ -28,20 +29,20 @@ app.use((req, res, next) => {
 });
 
 app.use("/auth", authRoutes);
+app.use("/family", familyRoutes);
 
 app.use((error, req, res, next) => {
     console.log(error);
     const status = error.statusCode || 500;
     const message = error.message;
-    // const data = error.data;
-    // res.status(status).json({ message: message, data: data });
-    res.status(status).json({ message: message });
+    const data = error.data;
+    res.status(status).json({ message: message, data: data });
 });
 
 mongoose
     .connect(dbURI)
-    .then((result) => {
-        console.log('Connected to database');
+    .then(async (result) => {
+        console.log("Connected to database");
         app.listen(8080);
     })
     .catch((err) => console.log(err));
