@@ -12,12 +12,6 @@ const familySchema = new mongoose.Schema({
             ref: "Users",
         },
     ],
-    members: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Members",
-        },
-    ],
 });
 
 module.exports = mongoose.model("Families", familySchema);
