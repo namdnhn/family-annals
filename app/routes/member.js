@@ -12,4 +12,7 @@ router.post(
     memberController.createMember
 );
 
+//PUT /member/update/id
+router.put("/update/:id", isAuth, memberController.updateMember);
+
 module.exports = router;

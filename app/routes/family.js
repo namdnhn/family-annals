@@ -26,9 +26,9 @@ router.put(
 router.delete("/delete/:id", isAuth, familyController.deleteFamily);
 
 //GET /family/get/id
-router.get("/get/:id", isAuth, familyController.getFamily);
+router.get("/get/:id", familyController.getFamily);
 
 //GET /family/getall
-router.get("/getall", isAuth, familyController.getAllFamily);
+router.get("/getall", familyController.getAllFamily);
 
 module.exports = router;
