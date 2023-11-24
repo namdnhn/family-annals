@@ -22,4 +22,13 @@ router.put(
     familyController.updateFamily
 );
 
+//DELETE /family/delete/id
+router.delete("/delete/:id", isAuth, familyController.deleteFamily);
+
+//GET /family/get/id
+router.get("/get/:id", familyController.getFamily);
+
+//GET /family/getall
+router.get("/getall", familyController.getAllFamily);
+
 module.exports = router;
