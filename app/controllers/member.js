@@ -1,4 +1,5 @@
 const { validationResult } = require("express-validator");
+const mongoose = require("mongoose");
 
 const Families = require("../models/families");
 const Members = require("../models/members");
@@ -181,47 +182,47 @@ async function updateMemField(current_mem, field, field_data) {
             const oldParentIds = current_mem.parent;
             deletedIds = deletedIds.concat(
                 oldParentIds
-                    .map(id => id.toString())
-                    .filter(idStr => !ids.includes(idStr))
+                    .map((id) => id.toString())
+                    .filter((idStr) => !ids.includes(idStr))
             );
             break;
         case "children":
             const oldChildrenIds = current_mem.children;
             deletedIds = deletedIds.concat(
                 oldChildrenIds
-                    .map(id => id.toString())
-                    .filter(idStr => !ids.includes(idStr))
+                    .map((id) => id.toString())
+                    .filter((idStr) => !ids.includes(idStr))
             );
             break;
         case "spouse":
             const oldSpouseIds = current_mem.spouse;
             deletedIds = deletedIds.concat(
                 oldSpouseIds
-                    .map(id => id.toString())
-                    .filter(idStr => !ids.includes(idStr))
+                    .map((id) => id.toString())
+                    .filter((idStr) => !ids.includes(idStr))
             );
             break;
     }
 
-    console.log('deleteIds: ', deletedIds);
-    console.log('ids: ', ids);
+    console.log("deleteIds: ", deletedIds);
+    console.log("ids: ", ids);
 
     for (var i = 0; i < deletedIds.length; i++) {
         try {
             const member = await Members.findOne({ _id: deletedIds[i] });
-            console.log('member: ', member);
+            console.log("member: ", member);
             switch (field) {
                 case "parent":
                     member.children.pull(current_mem._id);
-                    console.log('delete children');
+                    console.log("delete children");
                     break;
                 case "children":
                     member.parent.pull(current_mem._id);
-                    console.log('delete parent');
+                    console.log("delete parent");
                     break;
                 case "spouse":
                     member.spouse.pull(current_mem._id);
-                    console.log('delete spouse');
+                    console.log("delete spouse");
                     break;
             }
             await member.save();
@@ -396,3 +397,72 @@ exports.updateMember = async (req, res, next) => {
         next(err);
     }
 };
+
+exports.deleteMember = async (req, res, next) => {
+    const member_id = req.params.id;
+    try {
+        const member = await Members.findOne({ _id: member_id });
+        if (!member) {
+            const error = new Error("Không tìm thấy thành viên!");
+            error.statusCode = 404;
+            throw error;
+        }
+
+        //delete in other document
+        const collectionsToUpdate = ["parent", "children", "spouse"];
+        for (let collection of collectionsToUpdate) {
+            await Members.updateMany(
+                { [collection]: member_id },
+                { $pull: { [collection]: member_id } }
+            );
+        }
+
+        const result = await Members.findOneAndDelete({ _id: member_id });
+
+        res.status(200).json({
+            message: "Xóa thành viên thành công!",
+            member: result,
+        });
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
+exports.getAllMembers = async (req, res, next) => {
+    try {
+        const members = await Members.find();
+        res.status(200).json({
+            message: "Lấy danh sách thành viên thành công!",
+            members: members,
+        });
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+}
+
+exports.getMember = async (req, res, next) => {
+    const member_id = req.params.id;
+    try {
+        const member = await Members.findOne({ _id: member_id });
+        if (!member) {
+            const error = new Error("Không tìm thấy thành viên!");
+            error.statusCode = 404;
+            throw error;
+        }
+        res.status(200).json({
+            message: "Lấy thông tin thành viên thành công!",
+            member: member,
+        });
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+}

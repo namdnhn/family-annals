@@ -15,4 +15,13 @@ router.post(
 //PUT /member/update/id
 router.put("/update/:id", isAuth, memberController.updateMember);
 
+//DELETE /member/delete/id
+router.delete("/delete/:id", isAuth, memberController.deleteMember);
+
+//GET /member/get/id
+router.get("/get/:id", memberController.getMember);
+
+//GET /member/getall
+router.get("/getall", memberController.getAllMembers);
+
 module.exports = router;
