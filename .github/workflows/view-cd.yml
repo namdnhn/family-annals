@@ -29,6 +29,6 @@ jobs:
       with:
         vercel-token: 'ZE7cdrScof0IxZFxqlfVDdVA' # Set this in your repo settings
         github-token: ${{ secrets.GITHUB_TOKEN }} # Automatically provided by GitHub
-        vercel-org-id: 'teams' # Set this in your repo settings
+        vercel-org-id: 'team_MsmhFNtUNexXMiW1t7AbIklC' # Set this in your repo settings
         vercel-project-id: 'to-lam-sons-projects' # Set this in your repo settings
         vercel-args: '--prod' # Deploy to production
