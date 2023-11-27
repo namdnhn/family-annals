@@ -26,7 +26,7 @@ app.use((req, res, next) => {
         "Access-Control-Allow-Headers",
         "Content-Type, Authorization"
     );
-    next();
+    next(); 
 });
 
 app.use("/auth", authRoutes);
