@@ -10,6 +10,10 @@ const memberDetailSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    gender: {
+        type: String,
+        required: true
+    },
     date_of_birth: {
         type: Date,
         required: true,
