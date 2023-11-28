@@ -27,8 +27,8 @@ jobs:
     - name: Deploy to Vercel
       uses: amondnet/vercel-action@v19
       with:
-        vercel-token: 'ZE7cdrScof0IxZFxqlfVDdVA' # Set this in your repo settings
+        vercel-token: ${{ secrets.VERCEL_TOKEN }} # Set this in your repo settings
         github-token: ${{ secrets.GITHUB_TOKEN }} # Automatically provided by GitHub
-        vercel-org-id: 'team_MsmhFNtUNexXMiW1t7AbIklC' # Set this in your repo settings
-        vercel-project-id: 'to-lam-sons-projects' # Set this in your repo settings
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }} # Set this in your repo settings
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }} # Set this in your repo settings
         vercel-args: '--prod' # Deploy to production
