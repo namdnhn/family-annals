@@ -13,10 +13,13 @@ export default {
         const responseData = await response.json();
 
         if (!response.ok) {
-            const error = new Error(
-                responseData.errors[0].msg || responseData.message || "Không thể đăng ký, kiểm tra dữ liệu của bạn"
-            );
-            console.log(error);
+            let errorMessage = "Không thể đăng ký, kiểm tra dữ liệu của bạn";
+            if (responseData.errors && responseData.errors.length > 0) {
+                errorMessage = responseData.errors[0].msg;
+            } else if (responseData.message) {
+                errorMessage = responseData.message;
+            }
+            const error = new Error(errorMessage);
             throw error;
         }
     },
@@ -35,16 +38,22 @@ export default {
         const responseData = await response.json();
 
         if (!response.ok) {
-            const error = new Error(
-                responseData.errors[0].msg || responseData.message || "Không thể đăng nhập, kiểm tra dữ liệu của bạn"
-            );
-            console.log(error);
+            let errorMessage = "Không thể đăng nhập, kiểm tra dữ liệu của bạn";
+            if (responseData.errors && responseData.errors.length > 0) {
+                errorMessage = responseData.errors[0].msg;
+            } else if (responseData.message) {
+                errorMessage = responseData.message;
+            }
+            const error = new Error(errorMessage);
             throw error;
         }
+
+        console.log(payload.email);
 
         context.commit("setUser", {
             token: responseData.token,
             userId: responseData.id,
+            email: payload.email,
             expiresIn: responseData.expiresIn,
         });
 
@@ -52,8 +61,8 @@ export default {
 
         localStorage.setItem("token", responseData.token);
         localStorage.setItem("userId", responseData.id);
+        localStorage.setItem("email", payload.email);
         localStorage.setItem("tokenExpiration", expiresIn);
-
     },
 
     async autoLogin(context) {
@@ -62,6 +71,7 @@ export default {
         const token = localStorage.getItem("token");
         const userId = localStorage.getItem("userId");
         const tokenExpiration = localStorage.getItem("tokenExpiration");
+        const email = localStorage.getItem("email");
 
         const expiresIn = +tokenExpiration - new Date().getTime();
 
@@ -75,6 +85,7 @@ export default {
         context.commit("setUser", {
             token: token,
             userId: userId,
+            email: email,
             tokenExpiration: tokenExpiration,
         });
     },
@@ -88,6 +99,7 @@ export default {
 
         localStorage.removeItem("token");
         localStorage.removeItem("userId");
+        localStorage.removeItem("email");
         localStorage.removeItem("tokenExpiration");
-    }
+    },
 };

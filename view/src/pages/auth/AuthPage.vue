@@ -1,8 +1,8 @@
 <template>
-    <main class="pt-20 bg-slate-400 h-screen flex items-center justify-center">
+    <main class="pt-20 h-screen flex items-center justify-center">
         <form
             @submit.prevent="login"
-            class="px-20 py-5 bg-white flex flex-col items-center rounded-lg gap-8"
+            class="px-20 py-5 bg-white flex flex-col items-center rounded-lg gap-8 border-2 shadow"
             v-if="loginForm"
         >
             <h1 class="xs:text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold">
@@ -64,8 +64,8 @@
 
         <form
             @submit.prevent="register"
-            class="px-20 py-5 bg-white flex flex-col items-center rounded-lg gap-8"
-            v-else-if="registerForm"
+            class="px-20 py-5 bg-white flex flex-col items-center rounded-lg gap-8 border-2 shadow"
+            v-if="registerForm"
         >
             <h1 class="xs:text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold">
                 Đăng ký
@@ -258,10 +258,11 @@ export default {
                     await this.$store.dispatch("login", payload);
                     console.log("login success");
                     this.resetValidate();
-                    
+
                     const redirect = this.$route.query.redirect || "/";
                     this.$router.push(redirect);
                 } catch (error) {
+                    console.log(error);
                     this.error.message = error.message;
                     this.error.title = "Đăng nhập thất bại!";
                     console.log(error.message);
@@ -348,7 +349,8 @@ export default {
             return (
                 this.email.isValid &&
                 this.password.isValid &&
-                this.confirmPassword.isValid && this.term.isValid
+                this.confirmPassword.isValid &&
+                this.term.isValid
             );
         },
         loginValidate() {
