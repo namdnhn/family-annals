@@ -9,6 +9,21 @@ router.post(
     "/add",
     isAuth,
     [body("fullname").trim().isLength({ min: 5 })],
+    [
+        body("gender")
+            .trim()
+            .custom((value) => {
+                if (
+                    value !== "Nam" &&
+                    value !== "Nữ" &&
+                    value !== "Male" &&
+                    value !== "Female"
+                ) {
+                    throw new Error("Giới tính không hợp lệ!");
+                }
+                return true;
+            }),
+    ],
     memberController.createMember
 );
 

@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator");
 
 const Families = require("../models/families");
+const Members = require("../models/members");
 
 exports.createFamily = async (req, res, next) => {
     const errors = validationResult(req);
@@ -133,9 +134,37 @@ exports.getFamily = async (req, res, next) => {
             error.statusCode = 404;
             throw error;
         }
+        const members = await Members.find({ family_id: family_id });
+        if (!members) {
+            const error = new Error("Không tìm thấy thành viên trong dòng họ!");
+            error.statusCode = 404;
+            throw error;
+        }
+
+        //Tạo cây dòng họ
+        let tree = [];
+        let root = members.find(
+            (member) => member.parent.length === 0 || !member.parent
+        );
+        root = {
+            id: root._id,
+            fullname: root.fullname,
+            gender: root.gender,
+            parent: root.parent,
+            spouse: root.spouse,
+            children: root.children,
+            level: 0,
+        };
+        tree.push(root);
+        await getTreeFamily(members, root, tree);
+
+        // Sort the tree array by level
+        tree.sort((a, b) => a.level - b.level);
+
         res.status(200).json({
             message: "Lấy dữ liệu dòng họ thành công!",
             family: family,
+            familyTree: tree,
         });
     } catch (err) {
         if (!err.statusCode) {
@@ -144,3 +173,57 @@ exports.getFamily = async (req, res, next) => {
         next(err);
     }
 };
+
+async function getTreeFamily(members, root, tree) {
+    //add spouse
+    for (let i = 0; i < root.spouse.length; i++) {
+        let spouse = members.find(
+            (member) => member._id.toString() === root.spouse[i].toString()
+        );
+        if (!spouse) {
+            const error = new Error("Không tìm thấy thành viên trong dòng họ!");
+            error.statusCode = 404;
+            throw error;
+        }
+        spouse = {
+            id: spouse._id,
+            fullname: spouse.fullname,
+            gender: spouse.gender,
+            parent: spouse.parent,
+            spouse: spouse.spouse,
+            children: spouse.children,
+            level: root.level,
+        };
+        tree.push(spouse);
+    }
+    if (root.children.length === 0) {
+        return root;
+    } else {
+        //add children
+        for (let i = 0; i < root.children.length; i++) {
+            let child = members.find(
+                (member) =>
+                    member._id.toString() === root.children[i].toString()
+            );
+            if (!child) {
+                const error = new Error(
+                    "Không tìm thấy thành viên trong dòng họ!"
+                );
+                error.statusCode = 404;
+                throw error;
+            }
+            child = {
+                id: child._id,
+                fullname: child.fullname,
+                gender: child.gender,
+                parent: child.parent,
+                spouse: child.spouse,
+                children: child.children,
+                level: root.level + 1,
+            };
+            tree.push(child);
+
+            await getTreeFamily(members, child, tree);
+        }
+    }
+}

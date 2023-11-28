@@ -5,7 +5,7 @@
         <nav class="flex items-center gap-8">
             <router-link to="/homepage">
                 <img
-                    src="../../assets/images/logo_magicpost.jpg"
+                    src=""
                     alt="logo magicpost"
                     class="h-16 w-16 rounded-full hover:cursor-pointer"
                 />

@@ -12,6 +12,7 @@ async function createMemAddChildren(children_id, parent_data, family_id) {
         const member = new Members({
             family_id: family_id,
             fullname: parent_data[i].fullname,
+            gender: parent_data[i].gender,
             children: [children_id],
         });
         try {
@@ -21,7 +22,7 @@ async function createMemAddChildren(children_id, parent_data, family_id) {
             if (!err.statusCode) {
                 err.statusCode = 500;
             }
-            next(err);
+            throw err;
         }
     }
     return ids;
@@ -35,6 +36,7 @@ async function createMemAddSpouse(spouse_id, spouse_data, family_id) {
         const member = new Members({
             family_id: family_id,
             fullname: spouse_data[i].fullname,
+            gender: spouse_data[i].gender,
             spouse: [spouse_id],
         });
         try {
@@ -44,7 +46,7 @@ async function createMemAddSpouse(spouse_id, spouse_data, family_id) {
             if (!err.statusCode) {
                 err.statusCode = 500;
             }
-            next(err);
+            throw err;
         }
     }
     return ids;
@@ -58,6 +60,7 @@ async function createMemAddParent(parent_id, children_data, family_id) {
         const member = new Members({
             family_id: family_id,
             fullname: children_data[i].fullname,
+            gender: children_data[i].gender,
             parent: [parent_id],
         });
         try {
@@ -67,7 +70,7 @@ async function createMemAddParent(parent_id, children_data, family_id) {
             if (!err.statusCode) {
                 err.statusCode = 500;
             }
-            next(err);
+            throw err
         }
     }
     return ids;
@@ -133,7 +136,7 @@ async function updateMemField(current_mem, field, field_data) {
                         if (!err.statusCode) {
                             err.statusCode = 500;
                         }
-                        next(err);
+                        throw err
                     }
                     break;
                 case "children":
@@ -149,7 +152,7 @@ async function updateMemField(current_mem, field, field_data) {
                         if (!err.statusCode) {
                             err.statusCode = 500;
                         }
-                        next(err);
+                        throw err   
                     }
                     break;
                 case "spouse":
@@ -165,7 +168,7 @@ async function updateMemField(current_mem, field, field_data) {
                         if (!err.statusCode) {
                             err.statusCode = 500;
                         }
-                        next(err);
+                        throw err   
                     }
                     break;
             }
@@ -204,9 +207,6 @@ async function updateMemField(current_mem, field, field_data) {
             break;
     }
 
-    console.log("deleteIds: ", deletedIds);
-    console.log("ids: ", ids);
-
     for (var i = 0; i < deletedIds.length; i++) {
         try {
             const member = await Members.findOne({ _id: deletedIds[i] });
@@ -230,7 +230,7 @@ async function updateMemField(current_mem, field, field_data) {
             if (!err.statusCode) {
                 err.statusCode = 500;
             }
-            next(err);
+            throw err
         }
     }
     return ids;
@@ -251,11 +251,13 @@ exports.createMember = async (req, res, next) => {
 
     const family_id = req.body.family_id;
     const fullname = req.body.fullname;
+    const gender = req.body.gender;
 
     //Tạo member mới với family_id và fullname
     const member = new Members({
         family_id: family_id,
         fullname: fullname,
+        gender: gender
     });
     let result;
     try {
@@ -351,6 +353,11 @@ exports.updateMember = async (req, res, next) => {
     //Kiểm tra member có thay đổi fullname hay không
     if (req.body.fullname) {
         member.fullname = req.body.fullname;
+    }
+
+    //Kiểm tra xem member có thay đổi gender hay không
+    if (req.body.gender) {
+        member.gender = req.body.gender
     }
 
     //Kiểm tra xem member có thay đổi parent hay không?: Xử lí parent (bao gồm hai trường hợp: là id của parent có sẵn hoặc là dữ liệu của một parent mới)
