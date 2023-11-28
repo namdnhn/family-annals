@@ -1,5 +1,5 @@
 <template>
-    <main class="pt-20">
-        avasvds
+    <main class="pt-16 lg:pt-20">
+        
     </main>
 </template>

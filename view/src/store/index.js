@@ -8,7 +8,7 @@ const store = createStore({
     },
     state() {
         return {
-            apiUrl: 'https://magic-post-api.vercel.app/'
+            apiUrl: 'http://localhost:8080/'
         }
     },
     getters: {
