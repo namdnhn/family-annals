@@ -1,14 +1,18 @@
 <template>
-    <main class="pt-16 lg:pt-20 bg-black">
-
+    <main class="pt-16 lg:pt-20 w-full">
+        <div id="app" class="">
+            asdasd
+            <VueFamilyTree :tree="tree" @card-click="cardClick" />
+        </div>
     </main>
 </template>
 
 <script>
-
-
+import VueFamilyTree from "../../components/tree/VueFamilyTree.vue";
 export default {
-
+    components: {
+        VueFamilyTree,
+    },
     data() {
         return {
             tree: [
@@ -21,83 +25,6 @@ export default {
                         name: "Jannet Grem",
                         image: "https://picsum.photos/300/300?random=2",
                     },
-                    children: [
-                        {
-                            firstPerson: {
-                                name: "Katia",
-                            },
-                            secondPerson: {
-                                name: "Oleg",
-                            },
-                            children: [
-                                {
-                                    firstPerson: {
-                                        name: "Gleb",
-                                    },
-                                    secondPerson: {
-                                        name: "Viktoriya",
-                                    },
-                                    children: [
-                                        {
-                                            firstPerson: {
-                                                name: "Rim",
-                                            },
-                                            secondPerson: {
-                                                name: "Natasha",
-                                            },
-                                        },
-                                        {
-                                            firstPerson: {
-                                                name: "Leonid",
-                                            },
-                                        },
-                                    ],
-                                },
-                                {
-                                    firstPerson: {
-                                        name: "Olga",
-                                    },
-                                    secondPerson: {
-                                        name: "Nikita",
-                                    },
-                                },
-                            ],
-                        },
-                        {
-                            firstPerson: {
-                                name: "Vitia",
-                            },
-                            secondPerson: {
-                                name: "Dasha",
-                            },
-                        },
-                        {
-                            firstPerson: {
-                                name: "Antonio Wild",
-                                image: "https://picsum.photos/300/300?random=3",
-                            },
-                            secondPerson: {
-                                name: "Olivia Olson",
-                            },
-                            children: [
-                                {
-                                    firstPerson: {
-                                        name: "Kristina Wild",
-                                    },
-                                },
-                                {
-                                    firstPerson: {
-                                        name: "Alexey Wild",
-                                    },
-                                },
-                                {
-                                    firstPerson: {
-                                        name: "Viktor Wild",
-                                    },
-                                },
-                            ],
-                        },
-                    ],
                 },
             ],
         };
