@@ -1,5 +1,5 @@
 <template>
-    <div class="vue-family-tree__branch">
+    <div class="vue-family-tree__branch" :style="`--wives-count: ${wives}`">
         <div class="vue-family-tree__row">
             <div
                 v-for="(block, index) in tree"
@@ -7,14 +7,18 @@
                 class="vue-family-tree__col"
                 :class="{
                     'vue-family-tree__col_couple':
-                        block.firstPerson && block.secondPerson,
+                        block.firstPerson &&
+                        block.secondPerson &&
+                        block.thirdPerson,
                 }"
             >
                 <div class="vue-family-tree__content">
                     <div
                         :class="{
                             'vue-family-tree__couple':
-                                block.firstPerson && block.secondPerson,
+                                block.firstPerson &&
+                                block.secondPerson &&
+                                block.thirdPerson,
                             'vue-family-tree__couple_children':
                                 block.children && block.children.length,
                         }"
@@ -44,6 +48,19 @@
                                         :image="block.secondPerson.image"
                                         :name="block.secondPerson.name"
                                         :source="block.secondPerson"
+                                        @click="$emit('card-click', $event)"
+                                    />
+                                </slot>
+                            </div>
+                        </div>
+                        <!-- last child  -->
+                        <div v-if="block.thirdPerson" class="pl-8">
+                            <div class="vue-family-tree__card">
+                                <slot name="card" :item="block.thirdPerson">
+                                    <Card
+                                        :image="block.thirdPerson.image"
+                                        :name="block.thirdPerson.name"
+                                        :source="block.thirdPerson"
                                         @click="$emit('card-click', $event)"
                                     />
                                 </slot>
@@ -81,6 +98,11 @@ export default {
             },
         },
     },
+    data() {
+        return {
+            wives: 2,
+        };
+    },
 };
 </script>
 
@@ -89,7 +111,8 @@ export default {
     &__branch {
         position: relative;
         .vue-family-tree__branch {
-            padding-top: 16px;
+            padding-top: 40px;
+            display: flex;
             .vue-family-tree__col {
                 padding-top: 16px;
                 &:before {
@@ -98,21 +121,21 @@ export default {
                     top: 0;
                     width: 100%;
                     height: 16px;
-                    right: 0;
+                    left: 82px;
                     border-top: 1px solid #ddd;
                 }
                 &:after {
                     content: "";
                     position: absolute;
                     top: 0;
-                    left: 50%;
+                    left: 82px;
                     height: 16px;
                     width: 1px;
                     background-color: #ddd;
                 }
                 &:first-child {
                     &:before {
-                        width: 82px;
+                        width: calc(100%);
                         border-left: 1px solid #ddd;
                     }
                     &:after {
@@ -121,9 +144,9 @@ export default {
                 }
                 &:last-child {
                     &:before {
-                        width: 82px;
+                        width: 0;
                         border-right: 1px solid #ddd;
-                        left: 0;
+                        left: 82px;
                         right: auto;
                     }
                     &:after {
@@ -140,22 +163,50 @@ export default {
                     }
                 }
                 &_couple {
+                    &:before {
+                        content: "";
+                        position: absolute;
+                        top: 0;
+                        width: 100%;
+                        height: 16px;
+                        left: 82px;
+                        border-top: 1px solid #ddd;
+                    }
+
                     &:after {
-                        left: calc(50% - 68px);
+                        // left: calc(50% - 58px);
+                        left: 82px;
                     }
                     &:first-child {
                         &:before {
-                            width: calc(50% + 68px);
+                            // width: calc(50% + 140px);
+                            width: calc(
+                                100% -
+                                    (
+                                        (100% - var(--wives-count) * 198px) / 2 +
+                                            82px
+                                    ) + 82px
+                            );
+                            //1 vợ thì content là 198px
+                            left: calc(
+                                (100% - var(--wives-count) * 198px) / 2 + 82px
+                            );
                         }
                     }
                     &:last-child {
                         &:before {
-                            width: calc(50% - 68px);
+                            content: "";
+                            position: absolute;
+                            top: 0;
+                            width: 1px;
+                            height: 16px;
+                            left: 82px;
+                            border-top: 1px solid #ddd;
                         }
                     }
-                    &:first-child:last-child {
-                        padding-left: 146px;
-                    }
+                    // &:first-child:last-child {
+                    //     padding-left: 146px;
+                    // }
                 }
             }
         }
@@ -166,7 +217,10 @@ export default {
     }
     &__col {
         position: relative;
-        & + .vue-family-tree__col {
+        // & + .vue-family-tree__col {
+        //     padding-left: 16px;
+        // }
+        .vue-family-tree__col {
             padding-left: 16px;
         }
     }
@@ -177,44 +231,35 @@ export default {
     &__couple {
         position: relative;
         display: inline-flex;
-        &:before {
-            content: "";
-            position: absolute;
-            top: 50px;
-            left: 50%;
-            margin-left: -16px;
-            height: 1px;
-            width: 32px;
-            background-color: #ddd;
-        }
         .vue-family-tree__person {
-            &:first-child {
-                padding-right: 16px;
+            padding-left: 32px;
+            // padding-right: 16px;
+            &:before {
+                content: "";
+                position: absolute;
+                top: 50px;
+                right: 0;
+                height: 1px;
+                margin-right: -32px;
+                width: 32px;
+                background-color: #ddd;
             }
             &:last-child {
-                padding-left: 16px;
+                &:before {
+                    display: none;
+                }
             }
         }
         &_children {
             .vue-family-tree__person {
-                &:last-child {
-                    &:before {
+                &:first-child {
+                    &::after {
                         content: "";
                         position: absolute;
-                        top: 50px;
-                        left: 0;
+                        top: 100px;
+                        left: calc(50% + 16px);
                         width: 1px;
-                        height: calc(100% - 34px);
-                        background-color: #ddd;
-                    }
-                    &:after {
-                        content: "";
-                        position: absolute;
-                        top: 48px;
-                        left: -3px;
-                        width: 6px;
-                        height: 6px;
-                        border-radius: 50%;
+                        height: calc(100% - 60px);
                         background-color: #ddd;
                     }
                 }
@@ -222,8 +267,13 @@ export default {
         }
     }
     &__person {
+        padding-left: 16px;
+        height: 156px;
         position: relative;
         z-index: 10;
     }
+}
+.vue-family-tree__col.vue-family-tree__col_couple {
+    padding-left: 0;
 }
 </style>

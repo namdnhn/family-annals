@@ -26,5 +26,10 @@ export default {
             },
         },
     },
+    methods: {
+        cardClick(item) {
+            this.$emit("card-click", item);
+        },
+    },
 };
 </script>
