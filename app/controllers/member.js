@@ -1,8 +1,41 @@
 const { validationResult } = require("express-validator");
-const mongoose = require("mongoose");
 
 const Families = require("../models/families");
 const Members = require("../models/members");
+
+//auto add members to family
+async function addMembersToFamily(family_id, ids) {
+    const family = await Families.findById(family_id);
+    if (!family) {
+        throw new Error("Không thể tìm thấy dòng họ!");
+    }
+
+    for (let id of ids) {
+        const member = await Members.findById({ _id: id });
+        if (!member) {
+            throw new Error("Thành viên không tồn tại");
+        }
+        family.members.push(id);
+    }
+
+    await family.save();
+}
+
+async function deleteMemberFromFamily(family_id, id) {
+    const family = await Families.findById(family_id);
+    if (!family) {
+        throw new Error("Không thể tìm thấy dòng họ!");
+    }
+
+    const member = await Members.findById({ _id: id });
+    if (!member) {
+        throw new Error("Thành viên không tồn tại");
+    }
+
+    family.members.pull(id);
+
+    await family.save();
+}
 
 // Hàm xử lí tạo member mới và auto thêm children
 // Dùng cho khi tạo một member mới và member đó tạo một parent mới (không dùng parent_id)
@@ -25,6 +58,7 @@ async function createMemAddChildren(children_id, parent_data, family_id) {
             throw err;
         }
     }
+    addMembersToFamily(family_id, ids);
     return ids;
 }
 
@@ -49,6 +83,7 @@ async function createMemAddSpouse(spouse_id, spouse_data, family_id) {
             throw err;
         }
     }
+    addMembersToFamily(family_id, ids);
     return ids;
 }
 
@@ -70,9 +105,10 @@ async function createMemAddParent(parent_id, children_data, family_id) {
             if (!err.statusCode) {
                 err.statusCode = 500;
             }
-            throw err
+            throw err;
         }
     }
+    addMembersToFamily(family_id, ids);
     return ids;
 }
 
@@ -136,7 +172,7 @@ async function updateMemField(current_mem, field, field_data) {
                         if (!err.statusCode) {
                             err.statusCode = 500;
                         }
-                        throw err
+                        throw err;
                     }
                     break;
                 case "children":
@@ -152,7 +188,7 @@ async function updateMemField(current_mem, field, field_data) {
                         if (!err.statusCode) {
                             err.statusCode = 500;
                         }
-                        throw err   
+                        throw err;
                     }
                     break;
                 case "spouse":
@@ -168,7 +204,7 @@ async function updateMemField(current_mem, field, field_data) {
                         if (!err.statusCode) {
                             err.statusCode = 500;
                         }
-                        throw err   
+                        throw err;
                     }
                     break;
             }
@@ -207,30 +243,55 @@ async function updateMemField(current_mem, field, field_data) {
             break;
     }
 
+    //function delete member
     for (var i = 0; i < deletedIds.length; i++) {
         try {
+            // const member = await Members.findOne({ _id: deletedIds[i] });
+            // console.log("member: ", member);
+            // switch (field) {
+            //     case "parent":
+            //         member.children.pull(current_mem._id);
+            //         console.log("delete children");
+            //         break;
+            //     case "children":
+            //         member.parent.pull(current_mem._id);
+            //         console.log("delete parent");
+            //         break;
+            //     case "spouse":
+            //         member.spouse.pull(current_mem._id);
+            //         console.log("delete spouse");
+            //         break;
+            // }
+            // await deleteMemberFromFamily(current_mem.family_id, current_mem._id)
+            // await member.save();
+
             const member = await Members.findOne({ _id: deletedIds[i] });
-            console.log("member: ", member);
-            switch (field) {
-                case "parent":
-                    member.children.pull(current_mem._id);
-                    console.log("delete children");
-                    break;
-                case "children":
-                    member.parent.pull(current_mem._id);
-                    console.log("delete parent");
-                    break;
-                case "spouse":
-                    member.spouse.pull(current_mem._id);
-                    console.log("delete spouse");
-                    break;
+            if (!member) {
+                const error = new Error("Không tìm thấy thành viên!");
+                error.statusCode = 404;
+                throw error;
             }
-            await member.save();
+
+            //delete in families collection
+            deleteMemberFromFamily(current_mem.family_id, deletedIds[i])
+
+            //delete in other document
+            const collectionsToUpdate = ["parent", "children", "spouse"];
+            for (let collection of collectionsToUpdate) {
+                await Members.updateMany(
+                    { [collection]: deletedIds[i] },
+                    { $pull: { [collection]: deletedIds[i] } }
+                );
+            }
+
+            await Members.findOneAndDelete({
+                _id: deletedIds[i],
+            });
         } catch (err) {
             if (!err.statusCode) {
                 err.statusCode = 500;
             }
-            throw err
+            throw err;
         }
     }
     return ids;
@@ -257,11 +318,15 @@ exports.createMember = async (req, res, next) => {
     const member = new Members({
         family_id: family_id,
         fullname: fullname,
-        gender: gender
+        gender: gender,
     });
     let result;
     try {
         result = await member.save();
+
+        //add member to families
+        const ids = [result._id];
+        await addMembersToFamily(family_id, ids);
     } catch (err) {
         if (!err.statusCode) {
             err.statusCode = 500;
@@ -357,7 +422,7 @@ exports.updateMember = async (req, res, next) => {
 
     //Kiểm tra xem member có thay đổi gender hay không
     if (req.body.gender) {
-        member.gender = req.body.gender
+        member.gender = req.body.gender;
     }
 
     //Kiểm tra xem member có thay đổi parent hay không?: Xử lí parent (bao gồm hai trường hợp: là id của parent có sẵn hoặc là dữ liệu của một parent mới)
@@ -415,6 +480,9 @@ exports.deleteMember = async (req, res, next) => {
             throw error;
         }
 
+        //delete in families collection
+        await deleteMemberFromFamily(member.family_id, member._id)
+
         //delete in other document
         const collectionsToUpdate = ["parent", "children", "spouse"];
         for (let collection of collectionsToUpdate) {
@@ -451,7 +519,7 @@ exports.getAllMembers = async (req, res, next) => {
         }
         next(err);
     }
-}
+};
 
 exports.getMember = async (req, res, next) => {
     const member_id = req.params.id;
@@ -472,4 +540,4 @@ exports.getMember = async (req, res, next) => {
         }
         next(err);
     }
-}
+};
