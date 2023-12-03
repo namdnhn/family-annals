@@ -1,14 +1,18 @@
 <template>
-    <main class="pt-16 lg:pt-20 bg-black">
-
+    <main class="w-full">
+        <div id="app" class="">
+            asdasd
+            <VueFamilyTree :tree="tree" @card-click="cardClick" />
+        </div>
     </main>
 </template>
 
 <script>
-
-
+import VueFamilyTree from "../../components/tree/VueFamilyTree.vue";
 export default {
-
+    components: {
+        VueFamilyTree,
+    },
     data() {
         return {
             tree: [
@@ -17,83 +21,22 @@ export default {
                         name: "John Walker",
                         image: "https://picsum.photos/300/300?random=1",
                     },
-                    secondPerson: {
-                        name: "Jannet Grem",
-                        image: "https://picsum.photos/300/300?random=2",
-                    },
+                    spouse: [
+                        {
+                            name: "Jane Walker",
+                            image: "https://picsum.photos/300/300?random=2",
+                        },
+                    ],
                     children: [
                         {
                             firstPerson: {
-                                name: "Katia",
-                            },
-                            secondPerson: {
-                                name: "Oleg",
-                            },
-                            children: [
-                                {
-                                    firstPerson: {
-                                        name: "Gleb",
-                                    },
-                                    secondPerson: {
-                                        name: "Viktoriya",
-                                    },
-                                    children: [
-                                        {
-                                            firstPerson: {
-                                                name: "Rim",
-                                            },
-                                            secondPerson: {
-                                                name: "Natasha",
-                                            },
-                                        },
-                                        {
-                                            firstPerson: {
-                                                name: "Leonid",
-                                            },
-                                        },
-                                    ],
-                                },
-                                {
-                                    firstPerson: {
-                                        name: "Olga",
-                                    },
-                                    secondPerson: {
-                                        name: "Nikita",
-                                    },
-                                },
-                            ],
-                        },
-                        {
-                            firstPerson: {
-                                name: "Vitia",
-                            },
-                            secondPerson: {
-                                name: "Dasha",
-                            },
-                        },
-                        {
-                            firstPerson: {
-                                name: "Antonio Wild",
+                                name: "John Walker Jr.",
                                 image: "https://picsum.photos/300/300?random=3",
                             },
-                            secondPerson: {
-                                name: "Olivia Olson",
-                            },
-                            children: [
+                            spouse: [
                                 {
-                                    firstPerson: {
-                                        name: "Kristina Wild",
-                                    },
-                                },
-                                {
-                                    firstPerson: {
-                                        name: "Alexey Wild",
-                                    },
-                                },
-                                {
-                                    firstPerson: {
-                                        name: "Viktor Wild",
-                                    },
+                                    name: "Jane Walker Jr.",
+                                    image: "https://picsum.photos/300/300?random=4",
                                 },
                             ],
                         },

@@ -1,11 +1,11 @@
 <template>
     <header
-        class="bg-green-300 h-16 lg:h-20 fixed top-0 right-0 left-0 flex items-center justify-between px-10 shadow z-10"
+        class="bg-green-300 h-16 lg:h-20 fixed top-0 right-0 left-0 flex items-center justify-between px-10 shadow z-40"
     >
         <nav class="flex items-center gap-8">
             <router-link to="/homepage">
                 <img
-                    src=""
+                    src="../../assets/images/logo.png"
                     alt="logo magicpost"
                     class="h-16 w-16 rounded-full hover:cursor-pointer"
                 />
@@ -40,7 +40,9 @@
                 alt="user avt"
                 class="h-10 w-10 rounded-full"
             />
-            <p class="text-xs md:text-sm lg:text-base font-semibold text-sky-900">
+            <p
+                class="text-xs md:text-sm lg:text-base font-semibold text-sky-900"
+            >
                 {{ userEmail }}
             </p>
             <font-awesome-icon
@@ -72,7 +74,7 @@ export default {
     data() {
         return {
             isShowUserInfo: false,
-            userEmail: "none"
+            userEmail: "none",
         };
     },
     methods: {
@@ -82,11 +84,9 @@ export default {
     },
     computed: {
         isLoggedIn() {
+            this.userEmail = this.$store.getters.getUserEmail;
             return this.$store.getters.isAuthenticated;
         },
     },
-    async mounted() {
-        this.userEmail = await this.$store.getters.getUserEmail;
-    }
 };
 </script>
