@@ -11,6 +11,7 @@ const dbURI = process.env.DB_CONNECT;
 const authRoutes = require("./routes/auth");
 const familyRoutes = require("./routes/family");
 const memberRoutes = require("./routes/member");
+const searchRoutes = require("./routes/search");
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use((req, res, next) => {
 app.use("/auth", authRoutes);
 app.use("/family", familyRoutes);
 app.use("/member", memberRoutes);
+app.use("/search", searchRoutes);
 
 app.use((error, req, res, next) => {
     console.log(error);
