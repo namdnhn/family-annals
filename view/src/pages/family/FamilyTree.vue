@@ -1,5 +1,5 @@
 <template>
-    <main class="pt-16 lg:pt-20 w-full">
+    <main class="w-full">
         <div id="app" class="">
             asdasd
             <VueFamilyTree :tree="tree" @card-click="cardClick" />
@@ -21,112 +21,24 @@ export default {
                         name: "John Walker",
                         image: "https://picsum.photos/300/300?random=1",
                     },
-                    secondPerson: {
-                        name: "Jannet Grem",
-                        image: "https://picsum.photos/300/300?random=2",
-                    },
-                    thirdPerson: {
-                        name: "Jannet Grem",
-                        image: "https://picsum.photos/300/300?random=3",
-                    },
+                    spouse: [
+                        {
+                            name: "Jane Walker",
+                            image: "https://picsum.photos/300/300?random=2",
+                        },
+                    ],
                     children: [
                         {
                             firstPerson: {
-                                name: "John Walker",
-                                image: "https://picsum.photos/300/300?random=4",
+                                name: "John Walker Jr.",
+                                image: "https://picsum.photos/300/300?random=3",
                             },
-                            secondPerson: {
-                                name: "Jannet Grem",
-                                image: "https://picsum.photos/300/300?random=5",
-                            },
-                            thirdPerson: {
-                                name: "Jannet Grem",
-                                image: "https://picsum.photos/300/300?random=6",
-                            },
-                            children: [{
-                                firstPerson: {
-                                    name: "John Walker",
-                                    image: "https://picsum.photos/300/300?random=7",
+                            spouse: [
+                                {
+                                    name: "Jane Walker Jr.",
+                                    image: "https://picsum.photos/300/300?random=4",
                                 },
-                                secondPerson: {
-                                    name: "Jannet Grem",
-                                    image: "https://picsum.photos/300/300?random=8",
-                                },
-                                thirdPerson: {
-                                    name: "Jannet Grem",
-                                    image: "https://picsum.photos/300/300?random=9",
-                                },
-                                children: [
-                                    {
-                                        firstPerson: {
-                                            name: "John Walker",
-                                            image: "https://picsum.photos/300/300?random=10",
-                                        },
-                                        secondPerson: {
-                                            name: "Jannet Grem",
-                                            image: "https://picsum.photos/300/300?random=11",
-                                        },
-                                        thirdPerson: {
-                                            name: "Jannet Grem",
-                                            image: "https://picsum.photos/300/300?random=12",
-                                        },
-                                    },
-                                    {
-                                        firstPerson: {
-                                            name: "John Walker",
-                                            image: "https://picsum.photos/300/300?random=13",
-                                        },
-                                        
-                                    },
-                                    {
-                                        firstPerson: {
-                                            name: "John Walker",
-                                            image: "https://picsum.photos/300/300?random=14",
-                                        },
-                                        
-                                    }
-                                    ,
-                                    {
-                                        firstPerson: {
-                                            name: "John Walker",
-                                            image: "https://picsum.photos/300/300?random=14",
-                                        },
-                                        
-                                    }
-                                    ,
-                                    {
-                                        firstPerson: {
-                                            name: "John Walker",
-                                            image: "https://picsum.photos/300/300?random=14",
-                                        },
-                                        
-                                    }
-                                    ,
-                                    {
-                                        firstPerson: {
-                                            name: "John Walker",
-                                            image: "https://picsum.photos/300/300?random=14",
-                                        },
-                                        
-                                    }
-                                    ,
-                                    {
-                                        firstPerson: {
-                                            name: "John Walker",
-                                            image: "https://picsum.photos/300/300?random=14",
-                                        },
-                                        
-                                    }
-                                    
-                                ]
-                            }]
-                        },
-                        {
-                            firstPerson: {
-                                name: "John Walker",
-                                image: "https://picsum.photos/300/300?random=5",
-                            },
-
+                            ],
                         },
                     ],
                 },

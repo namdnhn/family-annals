@@ -1,10 +1,12 @@
 import {createStore} from 'vuex'
 
 import authModule from './modules/auth/index.js'
+import familyModule from './modules/family/index.js'
 
 const store = createStore({
     modules: {
-        auth: authModule
+        auth: authModule,
+        family: familyModule
     },
     state() {
         return {

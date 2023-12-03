@@ -75,7 +75,7 @@ export default {
 
         const expiresIn = +tokenExpiration - new Date().getTime();
 
-        console.log(expiresIn);
+        console.log("token expires in: ", expiresIn);
 
         if (expiresIn < 0) {
             context.dispatch("logout");

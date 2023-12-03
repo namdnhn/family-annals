@@ -1,7 +1,7 @@
 <template>
     <div>
         <div>
-            <VueFamilyTreeBranch :tree="tree" @card-click="cardClick">
+            <VueFamilyTreeBranch :tree="tree" @card-click="cardClick" class="">
                 <template v-slot:card="{ item }">
                     <slot name="card" :item="item" />
                 </template>

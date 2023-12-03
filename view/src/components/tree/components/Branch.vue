@@ -1,5 +1,5 @@
 <template>
-    <div class="vue-family-tree__branch" :style="`--wives-count: ${wives}`">
+    <div class="vue-family-tree__branch">
         <div class="vue-family-tree__row">
             <div
                 v-for="(block, index) in tree"
@@ -7,18 +7,15 @@
                 class="vue-family-tree__col"
                 :class="{
                     'vue-family-tree__col_couple':
-                        block.firstPerson &&
-                        block.secondPerson &&
-                        block.thirdPerson,
+                        block.firstPerson && block.spouse.length > 0,
                 }"
+                :style="`--wives-count: ${block.spouse.length + 1}`"
             >
                 <div class="vue-family-tree__content">
                     <div
                         :class="{
                             'vue-family-tree__couple':
-                                block.firstPerson &&
-                                block.secondPerson &&
-                                block.thirdPerson,
+                                block.firstPerson && block.spouse.length > 0,
                             'vue-family-tree__couple_children':
                                 block.children && block.children.length,
                         }"
@@ -39,28 +36,15 @@
                             </div>
                         </div>
                         <div
-                            v-if="block.secondPerson"
+                            v-for="spouse in block.spouse"
                             class="vue-family-tree__person"
                         >
                             <div class="vue-family-tree__card">
-                                <slot name="card" :item="block.secondPerson">
+                                <slot name="card" :item="spouse">
                                     <Card
-                                        :image="block.secondPerson.image"
-                                        :name="block.secondPerson.name"
-                                        :source="block.secondPerson"
-                                        @click="$emit('card-click', $event)"
-                                    />
-                                </slot>
-                            </div>
-                        </div>
-                        <!-- last child  -->
-                        <div v-if="block.thirdPerson" class="pl-8">
-                            <div class="vue-family-tree__card">
-                                <slot name="card" :item="block.thirdPerson">
-                                    <Card
-                                        :image="block.thirdPerson.image"
-                                        :name="block.thirdPerson.name"
-                                        :source="block.thirdPerson"
+                                        :image="spouse.image"
+                                        :name="spouse.name"
+                                        :source="spouse"
                                         @click="$emit('card-click', $event)"
                                     />
                                 </slot>
@@ -100,7 +84,7 @@ export default {
     },
     data() {
         return {
-            wives: 2,
+            wives: 1,
         };
     },
 };
@@ -167,15 +151,23 @@ export default {
                         content: "";
                         position: absolute;
                         top: 0;
-                        width: 100%;
+                        width: calc(
+                            100% -
+                                ((100% - var(--wives-count) * 132px) / 2 + 82px) +
+                                82px
+                        );
                         height: 16px;
-                        left: 82px;
+                        left: calc(
+                            (100% - var(--wives-count) * 132px) / 2 + 82px
+                        );
                         border-top: 1px solid #ddd;
                     }
 
                     &:after {
                         // left: calc(50% - 58px);
-                        left: 82px;
+                        left: calc(
+                            (100% - var(--wives-count) * 132px) / 2 + 82px
+                        );
                     }
                     &:first-child {
                         &:before {
@@ -183,13 +175,13 @@ export default {
                             width: calc(
                                 100% -
                                     (
-                                        (100% - var(--wives-count) * 198px) / 2 +
+                                        (100% - var(--wives-count) * 132px) / 2 +
                                             82px
                                     ) + 82px
                             );
-                            //1 vợ thì content là 198px
+                            //1 nguoi trong couple content thi la 132px
                             left: calc(
-                                (100% - var(--wives-count) * 198px) / 2 + 82px
+                                (100% - var(--wives-count) * 132px) / 2 + 82px
                             );
                         }
                     }
@@ -198,9 +190,8 @@ export default {
                             content: "";
                             position: absolute;
                             top: 0;
-                            width: 1px;
+                            width: calc((100% - var(--wives-count) * 132px) / 2 );
                             height: 16px;
-                            left: 82px;
                             border-top: 1px solid #ddd;
                         }
                     }
@@ -231,6 +222,7 @@ export default {
     &__couple {
         position: relative;
         display: inline-flex;
+
         .vue-family-tree__person {
             padding-left: 32px;
             // padding-right: 16px;
