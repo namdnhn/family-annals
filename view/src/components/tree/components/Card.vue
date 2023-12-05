@@ -8,23 +8,53 @@
         />
         <div class="vue-family-card__name">
             <a href="#" @click.prevent="click">
-                {{ name }}
+                {{ fullname }}
             </a>
         </div>
+        <base-form
+            v-if="isShowMemberInfo"
+            :show="isShowMemberInfo"
+            @close="closeMemberInfo"
+            :id="this.memberViewd.id"
+            :fullname="this.memberViewd.fullname"
+            :gender="this.memberViewd.gender"
+        ></base-form>
     </div>
 </template>
 
 <script>
+import BaseForm from "../../ui/BaseForm.vue";
 export default {
     name: "FamilyCard",
+    components: {
+        BaseForm,
+    },
     props: {
-        name: String,
+        fullname: String,
         image: String,
         source: Object,
     },
+    data() {
+        return {
+            isShowMemberInfo: false,
+            memberViewd: {
+                id: "",
+                fullname: "",
+            }
+        };
+    },
     methods: {
         click() {
-            this.$emit("click", this.source);
+            // this.$emit("click", this.source);
+            this.memberViewd = {
+                id: this.source.id,
+                fullname: this.source.fullname,
+                gender: this.source.gender
+            }
+            this.isShowMemberInfo = true;
+        },
+        closeMemberInfo() {
+            this.isShowMemberInfo = false;
         },
     },
 };

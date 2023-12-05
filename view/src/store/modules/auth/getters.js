@@ -5,4 +5,10 @@ export default {
     getUserEmail(state) {
         return state.email;
     },
+    getUserId(state) {
+        return state.userId;
+    },
+    getToken(state) {
+        return state.token;
+    }
 };

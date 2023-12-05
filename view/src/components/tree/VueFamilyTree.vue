@@ -1,7 +1,31 @@
 <template>
-    <div>
-        <div>
-            <VueFamilyTreeBranch :tree="tree" @card-click="cardClick" class="">
+    <div
+        ref="wrapper"
+        class="vue-family-tree relative w-full flex"
+        @mousedown="dragstart"
+        @mousemove="drag"
+        @mouseup="dragend"
+        @mouseleave="dragend"
+        @touchstart="dragstart"
+        @touchmove="drag"
+        @touchend="dragend"
+        @touchcancel="dragend"
+        @touchleave="dragend"
+        :style="{
+            overflow: null,
+            cursor: dragAndDrop.mouseCursor,
+            '--tree-height': treeHeight + 'px',
+        }"
+    >
+        <div
+            ref="vueFamilyTree"
+            :style="{
+                position: enableDrag ? 'absolute' : null,
+                top: `${position.y}px`,
+                left: `${position.x}px`,
+            }"
+        >
+            <VueFamilyTreeBranch :tree="tree" @card-click="cardClick">
                 <template v-slot:card="{ item }">
                     <slot name="card" :item="item" />
                 </template>
@@ -25,11 +49,159 @@ export default {
                 return [];
             },
         },
+        enableDrag: {
+            type: Boolean,
+            default: true,
+        },
+        dragCursor: {
+            type: String,
+            default: "grabbing",
+        },
+        mouseChangeDiff: {
+            type: Number,
+            default: 2,
+        },
+        treeHeight: {
+            type: Number,
+            required: true,
+        },
+    },
+    data() {
+        return {
+            dragAndDrop: {
+                dragStarted: false,
+                dragStartX: 0,
+                dragStartY: 0,
+                diffX: 0,
+                diffY: 0,
+                mouseCursor: "default",
+            },
+            preventMouseEvents: false,
+            position: {
+                x: window.innerWidth / 2 - 225,
+                y: 0,
+            },
+        };
     },
     methods: {
-        cardClick(item) {
-            this.$emit("card-click", item);
+        // cardClick(item) {
+        //     this.$emit("card-click", item);
+        //     console.log('cardClick 1');
+        // },
+        mouseover(region) {
+            if (!this.preventMouseEvents) {
+                this.$emit("mouseover", region);
+            }
+        },
+        mouseleave(region) {
+            if (!this.preventMouseEvents) {
+                this.$emit("mouseleave", region);
+            }
+        },
+        // cardClick(payload) {
+        //     if (!this.preventMouseEvents) {
+        //         this.$emit("card-click", payload);
+        //     }
+        //     console.log(payload);
+        // },
+        dragstart(event) {
+            if (this.enableDrag) {
+                if (this.mobilePreventScroll) {
+                    const breakpoint =
+                        this.mobilePreventScroll.breakpoint || 1024;
+                    const selector =
+                        this.mobilePreventScroll.selector || "body";
+                    const mql = window.matchMedia(
+                        `(max-width: ${breakpoint}px)`
+                    );
+                    if (mql.matches) {
+                        const $el = document.querySelector(selector);
+                        this.previousMobileOverflowType = $el.style.overflow;
+                        $el.style.overflow = "hidden";
+                    }
+                }
+                this.dragAndDrop.dragStartX =
+                    event.pageX || event.touches[0].pageX;
+                this.dragAndDrop.dragStartY =
+                    event.pageY || event.touches[0].pageY;
+                this.dragAndDrop.dragStarted = true;
+            }
+            this.$emit("dragstart", event);
+        },
+        drag(event) {
+            if (this.enableDrag) {
+                if (this.dragAndDrop.dragStarted) {
+                    this.dragAndDrop.diffX =
+                        (event.pageX || event.touches[0].pageX) -
+                        this.dragAndDrop.dragStartX;
+                    this.dragAndDrop.diffY =
+                        (event.pageY || event.touches[0].pageY) -
+                        this.dragAndDrop.dragStartY;
+                    if (
+                        this.dragAndDrop.diffX > this.mouseChangeDiff ||
+                        this.dragAndDrop.diffX < -this.mouseChangeDiff ||
+                        this.dragAndDrop.diffY > this.mouseChangeDiff ||
+                        this.dragAndDrop.diffX < -this.mouseChangeDiff
+                    ) {
+                        this.preventMouseEvents = true;
+                        this.dragAndDrop.mouseCursor = this.dragCursor;
+                    }
+                    this.position.x += this.dragAndDrop.diffX;
+                    this.position.y += this.dragAndDrop.diffY;
+                    this.dragAndDrop.dragStartX =
+                        event.pageX || event.touches[0].pageX;
+                    this.dragAndDrop.dragStartY =
+                        event.pageY || event.touches[0].pageY;
+                    this.$emit("drag", event);
+                }
+            }
+        },
+        dragend() {
+            if (this.enableDrag) {
+                this.dragAndDrop.dragStarted = false;
+                this.dragAndDrop.mouseCursor = "default";
+                if (this.mobilePreventScroll) {
+                    const selector =
+                        this.mobilePreventScroll.selector || "body";
+                    const $el = document.querySelector(selector);
+                    $el.style.overflow = this.previousMobileOverflowType;
+                }
+                setTimeout(() => {
+                    this.preventMouseEvents = false;
+                }, 150);
+            }
+            this.$emit("dragend", event);
+        },
+        getTreeClientRect() {
+            return this.$refs.vueFamilyTree.getBoundingClientRect();
+        },
+        getWrapperClientRect() {
+            return this.$refs.wrapper.getBoundingClientRect();
+        },
+        centerTree() {
+            return new Promise((resolve, reject) => {
+                try {
+                    const wrapperCenterX =
+                        this.getWrapperClientRect().width / 2;
+                    const wrapperCenterY =
+                        this.getWrapperClientRect().height / 2;
+                    const mapCenterX = this.getTreeClientRect().width / 2;
+                    const mapCenterY = this.getTreeClientRect().height / 2;
+                    this.position.x = wrapperCenterX - mapCenterX;
+                    this.position.y = wrapperCenterY - mapCenterY;
+                    this.$emit("center-map");
+                    resolve(true);
+                } catch (e) {
+                    reject(e);
+                }
+            });
         },
     },
 };
 </script>
+
+<style scoped>
+.vue-family-tree {
+    height: var(--tree-height);
+}
+</style>
