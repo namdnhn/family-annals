@@ -41,7 +41,7 @@ export default function HomeScreen({ navigation }) {
             style={{
               fontFamily: "GentiumBookBasic-Italic",
               fontSize: 20,
-              color: "white",
+              color: "black",
             }}
           >
             Hello Hoàng Nam,
@@ -76,7 +76,7 @@ export default function HomeScreen({ navigation }) {
 const styles = {
   container: {
     flex: 1,
-    backgroundColor: "black",
+    backgroundColor: "white",
     marginBottom: 45,
     //marginTop: 30,
   },
@@ -183,7 +183,7 @@ const styles = {
     marginBottom: 15,
     height: 40,
     width: 80,
-    backgroundColor: 'black',
+    backgroundColor: 'green',
     borderWidth: 1,
     borderColor: 'white',
     justifyContent: 'center',
