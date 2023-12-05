@@ -167,7 +167,7 @@ export default function LoginScreen({ navigation }) {
 
 const styles = {
   backgroundContainer: {
-    backgroundColor: "rgb(178,170,216)",
+    backgroundColor: "white",
     flex: 1,
     width: null,
     height: null,
@@ -219,7 +219,7 @@ const styles = {
     borderTopRightRadius: 25,
     fontSize: 16,
     paddingLeft: (45 / standardWidth) * WIDTH,
-    backgroundColor: "rgba(221,114,158,1)",
+    backgroundColor: "green",
     color: "rgba(255,255,255,0.7)",
     marginHorizontal: 25,
   },
@@ -231,7 +231,7 @@ const styles = {
     borderBottomRightRadius: 25,
     fontSize: 16,
     paddingLeft: (45 / standardWidth) * WIDTH,
-    backgroundColor: "rgba(221,114,158,1)",
+    backgroundColor: "green",
     color: "rgba(255,255,255,0.7)",
     marginHorizontal: 25,
   },
@@ -263,7 +263,7 @@ const styles = {
     width: (WIDTH - 90) / 2,
     height: (70 / standardHeight) * HEIGHT,
     borderRadius: 40,
-    backgroundColor: "rgba(123,133,201,255)",
+    backgroundColor: "#3C7367",
     marginTop: 30,
     justifyContent: "center",
     alignItems: "center",

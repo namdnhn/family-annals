@@ -298,7 +298,7 @@ export default function Sign({ navigation }) {
 
 const styles = {
   backgroundContainer: {
-    backgroundColor: "rgb(178,170,216)",
+    backgroundColor: "rgba(236,230,221,255)",
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
@@ -315,7 +315,7 @@ const styles = {
     fontWeight: "bold",
     //fontFamily: "KedmoteScript",
     alignSelf: "center",
-    color: "rgba(255,255,255,0.7)",
+    color: "black",
   },
   inputContainer: {
     marginTop: 10,
@@ -327,7 +327,7 @@ const styles = {
     borderRadius: 25,
     fontSize: 14,
     paddingLeft: (45 / standardWidth) * WIDTH,
-    backgroundColor: "rgba(221,114,158,1)",
+    backgroundColor: "green",
     color: "rgba(255,255,255,0.7)",
     marginHorizontal: 25,
   },
@@ -345,7 +345,7 @@ const styles = {
     width: (WIDTH - 90) / 2,
     height: (65 / standardHeight) * HEIGHT,
     borderRadius: 40,
-    backgroundColor: "rgba(123,133,201,255)",
+    backgroundColor: "#3C7367",
     marginTop: 20,
     marginBottom: 10,
     justifyContent: "center",
