@@ -31,4 +31,7 @@ router.get("/get/:id", familyController.getFamily);
 //GET /family/getall
 router.get("/getall", familyController.getAllFamily);
 
+//GET /family/getftree/id
+router.get("/getftree/:id", familyController.getFamilyTree);
+
 module.exports = router;
