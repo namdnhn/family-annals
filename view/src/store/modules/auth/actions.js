@@ -94,6 +94,7 @@ export default {
         context.commit("setUser", {
             token: null,
             userId: null,
+            email: null,
             tokenExpiration: null,
         });
 
@@ -102,4 +103,17 @@ export default {
         localStorage.removeItem("email");
         localStorage.removeItem("tokenExpiration");
     },
+
+    async autoLogout(context) {
+        console.log("auto logout");
+        const token = localStorage.getItem("token");
+        const userId = localStorage.getItem("userId");
+        const tokenExpiration = localStorage.getItem("tokenExpiration");
+        const email = localStorage.getItem("email");
+
+        if (!token || !userId || !tokenExpiration || !email) {
+            context.dispatch("logout");
+            return;
+        }
+    }
 };

@@ -16,6 +16,7 @@ export default {
     //auto login
     mounted() {
         this.$store.dispatch("autoLogin");
+        this.$store.dispatch("autoLogout")
     },
 };
 </script>

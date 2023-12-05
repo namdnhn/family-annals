@@ -19,6 +19,16 @@
                         >Trang chủ</router-link
                     >
                 </li>
+                <li>
+                    <router-link class="hover:cursor-pointer" to="/family"
+                        >Tra cứu</router-link
+                    >
+                </li>
+                <li>
+                    <router-link class="hover:cursor-pointer" :to="manageFamilyLink"
+                        >Quản trị</router-link
+                    >
+                </li>
             </ul>
         </nav>
 
@@ -75,16 +85,25 @@ export default {
         return {
             isShowUserInfo: false,
             userEmail: "none",
+            userId: null,
+            manageFamilyLink: '',
         };
     },
     methods: {
         logout() {
             this.$store.dispatch("logout");
         },
+        async getUserId() {
+            this.userId = await this.$store.getters.userId;
+        },
     },
     computed: {
         isLoggedIn() {
             this.userEmail = this.$store.getters.getUserEmail;
+            this.userId = this.$store.getters.getUserId;
+            this.manageFamilyLink = `/family/manage/${this.userId}`;
+
+            console.log(this.$store.getters.isAuthenticated);
             return this.$store.getters.isAuthenticated;
         },
     },

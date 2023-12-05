@@ -1,5 +1,5 @@
 <template>
-    <div
+    <router-link :to="familyTreeLink"
         class="border px-4 py-2 flex items-center gap-4 border-green-500 rounded-xl hover:cursor-pointer hover:border-green-700"
     >
         <img
@@ -17,7 +17,7 @@
                 {{ members_quantity }} thành viên
             </p>
         </span>
-    </div>
+    </router-link>
 </template>
 
 <script>
@@ -35,6 +35,11 @@ export default {
             type: String,
             required: true,
         },
-    }
+    },
+    computed: {
+        familyTreeLink() {
+            return "/family/" + this.id + "/tree";
+        }
+    },
 }
 </script>

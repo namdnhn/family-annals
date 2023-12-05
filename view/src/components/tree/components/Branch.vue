@@ -28,7 +28,7 @@
                                 <slot name="card" :item="block.firstPerson">
                                     <Card
                                         :image="block.firstPerson.image"
-                                        :name="block.firstPerson.name"
+                                        :fullname="block.firstPerson.fullname"
                                         :source="block.firstPerson"
                                         @click="$emit('card-click', $event)"
                                     />
@@ -43,7 +43,7 @@
                                 <slot name="card" :item="spouse">
                                     <Card
                                         :image="spouse.image"
-                                        :name="spouse.name"
+                                        :fullname="spouse.fullname"
                                         :source="spouse"
                                         @click="$emit('card-click', $event)"
                                     />
@@ -81,11 +81,6 @@ export default {
                 return [];
             },
         },
-    },
-    data() {
-        return {
-            wives: 1,
-        };
     },
 };
 </script>

@@ -132,15 +132,15 @@
                 </p>
                 <family-card
                     v-for="family in families"
-                    :key="family.id"
-                    :id="family.id"
+                    :key="family._id"
+                    :id="family._id"
                     :members_quantity="family.members.length"
                     :name="family.name"
                 ></family-card>
             </div>
         </div>
+        <base-spinner v-if="isLoading"></base-spinner>
     </main>
-    <base-spinner v-if="isLoading"></base-spinner>
 </template>
 
 <script>
@@ -225,6 +225,7 @@ export default {
                     "family/getFamilies"
                 );
                 console.log("get all family success");
+                console.log(this.families);
             } catch (err) {
                 console.log(err);
             }
