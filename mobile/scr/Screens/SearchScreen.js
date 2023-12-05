@@ -37,19 +37,19 @@ export default function SearchScreen({ navigation }) {
             leftIcon={{
               type: "search-outline",
               name: "search",
-              color: "rgb(255,255,255)"
+              color: "black"
             }}
             rightIcon={{
               type: "backspace",
               name: "backspace",
-              color: "rgb(255,255,255)",
+              color: "black",
 
             }}
             inputContainerStyle={styles.inputContainerStyle}
             inputStyle={styles.inputStyle}
             leftIconContainerStyle={styles.leftIconStyle}
             rightIconContainerStyle={styles.rightIconStyle}
-            placeholderTextColor={"rgba(255, 255, 255, 0.7)"}
+            placeholderTextColor={"gray"}
             underlineColorAndroid="transparent"
           />
         </View>
@@ -65,7 +65,7 @@ export default function SearchScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   background: {
-    backgroundColor: "black",
+    backgroundColor: "white",
     flex: 1,
     width: null,
     height: null,
@@ -74,16 +74,16 @@ const styles = StyleSheet.create({
     width: WIDTH - 100,
     height: (40 / standardHeight) * HEIGHT,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.7)",
+    borderColor: "white",
     borderRadius: 10,
     fontSize: 16,
     paddingLeft: (45 / standardWidth) * WIDTH,
     backgroundColor: "black",
-    color: "rgb(255,255,255)",
+    color: "black",
     marginHorizontal: 20,
   },
   cancelButton: {
-    color: "rgb(255,255,255)",
+    color: "black",
     fontSize: 15,
   },
   note: {
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
 
   inputContainerStyle: {
     borderRadius: 10,
-    borderColor: "white",
+    borderColor: "black",
     borderWidth: 1,
     height: 40,
   },

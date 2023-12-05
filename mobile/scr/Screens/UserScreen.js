@@ -49,7 +49,7 @@ export default function UserScreen({ navigation }) {
     // }
   };
   return (
-    <View style={{ flex: 1, backgroundColor: 'black' }}>
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={{ marginTop: 24 }}>
         <Ionicons name='ios-arrow-back' size={24} color='#5257D1'></Ionicons>
       </View>
@@ -70,7 +70,7 @@ export default function UserScreen({ navigation }) {
           <Text style={styles.edit2} onPress={logOut}>Logout</Text>
         </TouchableOpacity>
       </View>
-      <Text style={{ marginLeft: 20, color: "white", fontFamily: "Open-san", fontSize: 20, marginBottom: 10 }}>Tra cứu thông tin</Text>
+      <Text style={{ marginLeft: 20, color: "black", fontFamily: "Open-san", fontSize: 20, marginBottom: 10 }}>Tra cứu thông tin</Text>
       
       <View style={{ height: 60 }}></View>
     </View>
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     height: undefined
   },
   name: {
-    color: 'white',
+    color: 'black',
     marginLeft: 30,
     marginTop: 15,
     fontSize: 20
@@ -109,9 +109,9 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     height: 40,
     width: 80,
-    backgroundColor: 'black',
+    backgroundColor: 'green',
     borderWidth: 1,
-    borderColor: 'white',
+    borderColor: 'black',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 50,
@@ -126,15 +126,15 @@ const styles = StyleSheet.create({
     marginTop: 15,
     height: 40,
     width: 80,
-    backgroundColor: 'black',
+    backgroundColor: 'green',
     borderWidth: 1,
-    borderColor: 'white',
+    borderColor: 'black',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 50,
   },
   buttonBackground: {
-    backgroundColor: "black",
+    backgroundColor: "white",
     borderColor: 'white',
     borderColor: 'white'
   },
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     fontWeight:"bold",
     flex: 1,
     fontSize: 20,
-    color: "white",
+    color: "black",
   },
   img: {
     width: WIDTH / 2 - 15,
