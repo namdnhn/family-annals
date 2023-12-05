@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, FlatList, Image } from "react-native";
+import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
 import PropTypes from "prop-types";
 import Svg, { Line } from "react-native-svg";
 const Sample = require("./sample.json");
@@ -40,25 +40,53 @@ export default class FamilyTree extends Component {
                   alignItems: "center",
                 }}
               >
-                <View
-                  style={{
-                    ...this.props.nodeStyle,
-                  }}
-                >
-                  <Image
-                    style={{ ...this.props.imageStyle }}
-                    source={{ uri: info.profile }}
-                  />
-                  <Text
+                <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+                  <View
                     style={{
-                      ...this.props.nodeTitleStyle,
-                      color: this.props.nodeTitleColor,
+                      ...this.props.nodeStyle,
                     }}
                   >
-                    {info.name}
-                    {level}
-                  </Text>
-                </View>
+                    <View
+                      style={{
+                        ...this.props.nodeImageStyle,
+                      }}
+                    >
+                      <Image
+                        style={{ ...this.props.imageStyle }}
+                        source={{ uri: info.profile }}
+                      />
+                    </View>
+                    <View style={{ ...this.props.textStyle }}>
+                      <Text
+                        style={{
+                          ...this.props.nodeTitleStyle,
+                          color: this.props.nodeTitleColor,
+                        }}
+                      >
+                        {info.name}
+                        {level}
+                      </Text>
+                      <Text
+                        style={{
+                          ...this.props.nodeInfoStyle,
+                          color: this.props.nodeInfoColor,
+                        }}
+                      >
+                        Sinh: {info.dob}
+                      </Text>
+                      {info.dod ? (
+                        <Text
+                          style={{
+                            ...this.props.nodeInfoStyle,
+                            color: this.props.nodeInfoColor,
+                          }}
+                        >
+                          Mất: {info.dod}
+                        </Text>
+                      ) : null}
+                    </View>
+                  </View>
+                </TouchableOpacity>
               </View>
               {this.hasChildren(item) && (
                 <Svg height="50" width="20">
