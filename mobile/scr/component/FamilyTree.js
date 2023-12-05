@@ -2,7 +2,89 @@ import React, { Component } from "react";
 import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
 import PropTypes from "prop-types";
 import Svg, { Line } from "react-native-svg";
-const Sample = require("./sample.json");
+const Sample = [
+  {
+    _comment: "Rethinam and Family",
+    name: "Rethinam",
+    spouse: [
+      {
+        _comment: "AmalRaj and Family",
+        name: "AmalRaj",
+        dob: "03/03/1925",
+        dod: null,
+        order: 1,
+        profile:
+          "https://images.unsplash.com/photo-1520206444322-d2df0dd4e78e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80",
+      },
+    ],
+    dob: "03/03/1925",
+    dod: null,
+    profile:
+      "https://images.unsplash.com/photo-1520206444322-d2df0dd4e78e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80",
+    children: [
+      {
+        _comment: "AmalRaj and Family",
+        name: "AmalRaj",
+        spouse: [
+          {
+            _comment: "AmalRaj and Family",
+            name: "AmalRaj",
+            dob: "03/03/1925",
+            dod: null,
+            order: 1,
+            profile:
+              "https://images.unsplash.com/photo-1520206444322-d2df0dd4e78e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80",
+          },
+        ],
+        dob: "03/03/1925",
+        dod: null,
+        order: 1,
+        profile:
+          "https://images.unsplash.com/photo-1520206444322-d2df0dd4e78e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80",
+      },
+      {
+        _comment: "ArokiyaRaj and Family",
+        name: "ArokiyaRaj",
+        spouse: null,
+        dob: "03/03/1925",
+        dod: "03/03/2017",
+        order: 2,
+        profile:
+          "https://images.unsplash.com/photo-1520206444322-d2df0dd4e78e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80",
+      },
+      {
+        _comment: "Leema and Family",
+        name: "Leema Rose Mary",
+        spouse: null,
+        dob: "03/03/1925",
+        dod: null,
+        order: 3,
+        profile:
+          "https://images.unsplash.com/photo-1520206444322-d2df0dd4e78e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80",
+      },
+      {
+        _comment: "ChristhuRaj and Family",
+        name: "ChristhuRaj",
+        spouse: null,
+        dob: "03/03/1925",
+        dod: null,
+        order: 4,
+        profile:
+          "https://images.unsplash.com/photo-1520206444322-d2df0dd4e78e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80",
+      },
+      {
+        _comment: "Gunaseeli and Family",
+        name: "Gunaseeli",
+        spouse: null,
+        dob: "06/01/1975",
+        dod: null,
+        order: 5,
+        profile:
+          "https://images.unsplash.com/photo-1520206444322-d2df0dd4e78e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80",
+      },
+    ],
+  },
+];
 
 export default class FamilyTree extends Component {
   constructor(props) {
@@ -13,6 +95,10 @@ export default class FamilyTree extends Component {
     return member.children && member.children.length;
   }
 
+  hasSpouse(member) {
+    return member.spouse && member.spouse.length;
+  }
+ 
   renderTree(data, level) {
     return (
       <FlatList
@@ -40,7 +126,9 @@ export default class FamilyTree extends Component {
                   alignItems: "center",
                 }}
               >
-                <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+                <TouchableOpacity
+                  onPress={() => this.props.navigation.goBack()}
+                >
                   <View
                     style={{
                       ...this.props.nodeStyle,
@@ -87,6 +175,74 @@ export default class FamilyTree extends Component {
                     </View>
                   </View>
                 </TouchableOpacity>
+                {this.hasSpouse(item) && (
+                  <Svg height="50" width="20">
+                    <Line
+                      x1="0"
+                      y1="50%"
+                      x2="150"
+                      y2="50%"
+                      stroke={this.props.pathColor}
+                      strokeWidth={this.props.strokeWidth}
+                    />
+                  </Svg>
+                )}
+                {this.hasSpouse(item) &&
+                  item.spouse.map((s, index) => {
+                    const { name, spouse, dob, dod, profile } = s;
+                    const info = { name, spouse, dob, dod, profile };
+                    return (
+                      <TouchableOpacity
+                        onPress={() => this.props.navigation.goBack()}
+                      >
+                        <View
+                          style={{
+                            ...this.props.nodeStyle,
+                          }}
+                        >
+                          <View
+                            style={{
+                              ...this.props.nodeImageStyle,
+                            }}
+                          >
+                            <Image
+                              style={{ ...this.props.imageStyle }}
+                              source={{ uri: info.profile }}
+                            />
+                          </View>
+                          <View style={{ ...this.props.textStyle }}>
+                            <Text
+                              style={{
+                                ...this.props.nodeTitleStyle,
+                                color: this.props.nodeTitleColor,
+                              }}
+                            >
+                              {info.name}
+                              {level}
+                            </Text>
+                            <Text
+                              style={{
+                                ...this.props.nodeInfoStyle,
+                                color: this.props.nodeInfoColor,
+                              }}
+                            >
+                              Sinh: {info.dob}
+                            </Text>
+                            {info.dod ? (
+                              <Text
+                                style={{
+                                  ...this.props.nodeInfoStyle,
+                                  color: this.props.nodeInfoColor,
+                                }}
+                              >
+                                Mất: {info.dod}
+                              </Text>
+                            ) : null}
+                          </View>
+                        </View>
+                      </TouchableOpacity>
+                    );
+                  })}
               </View>
               {this.hasChildren(item) && (
                 <Svg height="50" width="20">
