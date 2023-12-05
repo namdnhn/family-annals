@@ -12,6 +12,12 @@ const familySchema = new mongoose.Schema({
             ref: "Users",
         },
     ],
+    background: {
+        type: String,
+    },
+    logo: {
+        type: String,
+    },
     members: [
         {
             type: mongoose.Schema.Types.ObjectId,

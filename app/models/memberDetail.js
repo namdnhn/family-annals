@@ -12,34 +12,28 @@ const memberDetailSchema = new mongoose.Schema({
     },
     gender: {
         type: String,
-        required: true
+        required: true,
     },
     date_of_birth: {
-        type: Date,
-        required: true,
+        type: String,
+        required: false,
     },
     place_of_birth: {
         type: String,
-        required: true,
+        required: false,
     },
     date_of_death: {
-        type: Date,
+        type: String,
         required: false,
     },
     place_of_death: {
         type: String,
         required: false,
     },
-    current_address: {
+    images: {
         type: String,
-        required: true,
+        required: false,
     },
-    images: [
-        {
-            type: String,
-            required: false,
-        },
-    ],
     background_desc: {
         type: String,
         required: false,
