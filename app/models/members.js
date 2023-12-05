@@ -13,7 +13,10 @@ const memberSchema = new mongoose.Schema({
     gender: {
         type: String,
         required: true,
-        enum: ['Nam', 'Nữ', 'Male', 'Female']
+        enum: ["Nam", "Nữ", "Male", "Female"],
+    },
+    images: {
+        type: String,
     },
     parent: [
         {

@@ -150,8 +150,19 @@ exports.getFamily = async (req, res, next) => {
 
         //Tạo cây dòng họ
         let root = members.find(
-            (member) => member.parent.length === 0 || !member.parent
+            (member) =>
+                (member.parent.length === 0 || !member.parent) &&
+                member.gender !== "Nữ"
         );
+
+        if (!root) {
+            res.status(200).json({
+                message: "Lấy dữ liệu dòng họ thành công!",
+                family: family,
+                familyTree: null,
+            });
+        }
+
         let childrenField = [];
         for (let i = 0; i < root.children.length; i++) {
             let child = members.find(
@@ -186,6 +197,9 @@ exports.getFamily = async (req, res, next) => {
                 id: root._id.toString(),
                 fullname: root.fullname,
                 gender: root.gender,
+                image:
+                    root.images ||
+                    "https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere-thumbnail.png",
             },
             spouse: spouseField,
             children: childrenField,
@@ -220,6 +234,9 @@ async function getTreeFamily(members, root) {
             id: spouse._id.toString(),
             fullname: spouse.fullname,
             gender: spouse.gender,
+            image:
+                spouse.images ||
+                "https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere-thumbnail.png",
         };
     }
     if (root.children.length === 0) {
@@ -277,6 +294,9 @@ async function getTreeFamily(members, root) {
                     id: childMain._id.toString(),
                     fullname: childMain.fullname,
                     gender: childMain.gender,
+                    image:
+                        childMain.images ||
+                        "https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere-thumbnail.png",
                 },
                 spouse: spouseField,
                 children: childrenField,

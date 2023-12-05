@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator");
 
 const MemberDetails = require("../models/memberDetail");
+const Members = require("../models/members");
 
 exports.createMemberDetail = async (req, res, next) => {
     const errors = validationResult(req);
@@ -22,6 +23,24 @@ exports.createMemberDetail = async (req, res, next) => {
     const background_desc = req.body.background_desc;
 
     try {
+        //thay doi fullname va gender cua member
+        const currentMember = await Members.findOne({ _id: member_id });
+        if (!currentMember) {
+            const error = new Error("Không tìm thấy thông tin thành viên!");
+            error.statusCode = 404;
+            throw error;
+        }
+        if (fullname) {
+            currentMember.fullname = fullname;
+        }
+        if (gender) {
+            currentMember.gender = gender;
+        }
+        if (images) {
+            currentMember.images = images;
+        }
+        await currentMember.save();
+
         const createdMemberDetail = await MemberDetails.findOne({
             member_id: member_id,
         });
@@ -53,13 +72,40 @@ exports.createMemberDetail = async (req, res, next) => {
                 images: images,
                 background_desc: background_desc,
             });
+
             const result = await memberDetail.save();
+
             res.status(201).json({
                 message:
                     "Thông tin chi tiết của thành viên đã được tạo thành công!",
                 memberDetail: result,
             });
         }
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
+exports.getMemberDetail = async (req, res, next) => {
+    const member_id = req.params.id;
+    try {
+        const memberDetail = await MemberDetails.findOne({
+            member_id: member_id,
+        });
+        if (!memberDetail) {
+            const error = new Error(
+                "Không tìm thấy thông tin chi tiết của thành viên!"
+            );
+            error.statusCode = 404;
+            throw error;
+        }
+        res.status(200).json({
+            message: "Lấy thông tin chi tiết của thành viên thành công!",
+            memberDetail: memberDetail,
+        });
     } catch (err) {
         if (!err.statusCode) {
             err.statusCode = 500;
