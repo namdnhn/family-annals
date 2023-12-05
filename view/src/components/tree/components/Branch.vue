@@ -31,6 +31,7 @@
                                         :fullname="block.firstPerson.fullname"
                                         :source="block.firstPerson"
                                         @click="$emit('card-click', $event)"
+                                        @update-tree="$emit('update-tree')"
                                     />
                                 </slot>
                             </div>
@@ -46,6 +47,7 @@
                                         :fullname="spouse.fullname"
                                         :source="spouse"
                                         @click="$emit('card-click', $event)"
+                                        @update-tree="$emit('update-tree')"
                                     />
                                 </slot>
                             </div>
@@ -56,6 +58,7 @@
                     v-if="block.children"
                     :tree="block.children"
                     @card-click="$emit('card-click', $event)"
+                    @update-tree="$emit('update-tree')"
                 >
                     <template v-slot:card="{ item }">
                         <slot name="card" :item="item" />

@@ -18,6 +18,7 @@
             :id="this.memberViewd.id"
             :fullname="this.memberViewd.fullname"
             :gender="this.memberViewd.gender"
+            @update-tree="$emit('update-tree')"
         ></base-form>
     </div>
 </template>
@@ -29,6 +30,7 @@ export default {
     components: {
         BaseForm,
     },
+    emits: ['update-tree'],
     props: {
         fullname: String,
         image: String,
@@ -56,6 +58,9 @@ export default {
         closeMemberInfo() {
             this.isShowMemberInfo = false;
         },
+        test() {
+            console.log("test");
+        }
     },
 };
 </script>

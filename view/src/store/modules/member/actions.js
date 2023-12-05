@@ -73,4 +73,100 @@ export default {
 
         return responseData.memberDetail;
     },
+
+    async getMemberDetail(context, payload) {
+        let apiUrl =
+            (await context.rootGetters.getApiUrl) +
+            "memberdetail" +
+            "/get/" +
+            payload.member_id;
+
+        const response = await fetch(apiUrl, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        const responseData = await response.json();
+
+        if (!response.ok) {
+            let errorMessage =
+                "Có lỗi xảy ra, không thể lấy thông tin chi tiết thành viên!";
+            if (responseData.errors && responseData.errors.length > 0) {
+                errorMessage = responseData.errors[0].msg;
+            } else if (responseData.message) {
+                errorMessage = responseData.message;
+            }
+            const error = new Error(errorMessage);
+            throw error;
+        }
+
+        return responseData.memberDetail;
+    },
+
+    async getMember(context, id) {
+        let apiUrl = (await context.rootGetters.getApiUrl) + "member/get/" + id;
+
+        const response = await fetch(apiUrl, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        const responseData = await response.json();
+
+        if (!response.ok) {
+            let errorMessage =
+                "Có lỗi xảy ra, không thể lấy thông tin thành viên!";
+            if (responseData.errors && responseData.errors.length > 0) {
+                errorMessage = responseData.errors[0].msg;
+            } else if (responseData.message) {
+                errorMessage = responseData.message;
+            }
+            const error = new Error(errorMessage);
+            throw error;
+        }
+
+        return responseData;
+    },
+
+    async updateMember(context, payload) {
+        let apiUrl =
+            (await context.rootGetters.getApiUrl) +
+            "member" +
+            "/update/" +
+            payload.member_id;
+        console.log(apiUrl);
+        const response = await fetch(apiUrl, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + context.rootGetters.getToken,
+            },
+            body: JSON.stringify({
+                fullname: payload.fullname,
+                gender: payload.gender,
+                parent: payload.parent,
+                spouse: payload.spouse,
+                children: payload.children,
+            }),
+        });
+
+        const responseData = await response.json();
+
+        if (!response.ok) {
+            let errorMessage =
+                "Có lỗi xảy ra, không thể cập nhật thông tin thành viên!";
+            if (responseData.errors && responseData.errors.length > 0) {
+                errorMessage = responseData.errors[0].msg;
+            } else if (responseData.message) {
+                errorMessage = responseData.message;
+            }
+            const error = new Error(errorMessage);
+            throw error;
+        }
+
+    },
 };

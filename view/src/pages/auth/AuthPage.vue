@@ -130,7 +130,7 @@
                             @change="term.isValid = true"
                         />
                         <label for="term"
-                            >Tôi đồng ý với các điều khoản của MagicPost</label
+                            >Tôi đồng ý với các điều khoản của Family Annals</label
                         >
                     </span>
                     <span
@@ -167,7 +167,7 @@
             </p>
         </base-dialog>
         <base-dialog :show="!!success" :title="success" @close="closeDialog">
-            <p>Bạn có thể sử dụng tài khoản này để đăng nhập vào MagicPost</p>
+            <p>Bạn có thể sử dụng tài khoản này để đăng nhập vào Family Annals</p>
         </base-dialog>
     </main>
 </template>
@@ -341,7 +341,7 @@ export default {
             if (!this.term.value) {
                 this.term.isValid = false;
                 this.term.messageInvalid =
-                    "Bạn phải đồng ý với điều khoản của MagicPost";
+                    "Bạn phải đồng ý với điều khoản của Family Annals";
             } else {
                 this.term.isValid = true;
             }

@@ -25,7 +25,11 @@
                 left: `${position.x}px`,
             }"
         >
-            <VueFamilyTreeBranch :tree="tree" @card-click="cardClick">
+            <VueFamilyTreeBranch
+                :tree="tree"
+                @card-click="cardClick"
+                @update-tree="$emit('update-tree')"
+            >
                 <template v-slot:card="{ item }">
                     <slot name="card" :item="item" />
                 </template>
@@ -42,6 +46,7 @@ export default {
     components: {
         VueFamilyTreeBranch,
     },
+    emits: ['update-tree'],
     props: {
         tree: {
             type: Array,

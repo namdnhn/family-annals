@@ -85,6 +85,33 @@ export default {
 
         return responseData.familyTree;
     },
+    async getFamily(context, id) {
+        let apiUrl =
+            (await context.rootGetters.getApiUrl) + "family" + "/get/" + id;
+
+        console.log(apiUrl);
+        const response = await fetch(apiUrl, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        const responseData = await response.json();
+
+        if (!response.ok) {
+            let errorMessage = "Có lỗi xảy ra, không thể lấy dữ liệu!";
+            if (responseData.errors && responseData.errors.length > 0) {
+                errorMessage = responseData.errors[0].msg;
+            } else if (responseData.message) {
+                errorMessage = responseData.message;
+            }
+            const error = new Error(errorMessage);
+            throw error;
+        }
+
+        return responseData.family;
+    },
     
     async createFamily(context, payload) {
         let apiUrl = (await context.rootGetters.getApiUrl) + "family" + "/add";

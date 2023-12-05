@@ -10,7 +10,7 @@
             @submit.prevent="handleSubmit"
             class="border grid grid-cols-2 px-4 py-4 gap-4 rounded-lg overflow-hidden"
         >
-            <div class="grid grid-rows-2">
+            <div class="flex flex-col gap-2">
                 <div class="flex items-center gap-2">
                     <label for="familyName" class="max-w-fit"
                         >Tên dòng họ
@@ -31,7 +31,7 @@
                 />
             </div>
 
-            <div class="grid grid-rows-2">
+            <!-- <div class="grid grid-rows-2">
                 <span class="grid grid-cols-2 items-center justify-start">
                     <label for="admin" class="max-w-fit"
                         >Thêm người quản trị:</label
@@ -76,14 +76,14 @@
                         >Thêm</span
                     >
                 </div>
-            </div>
+            </div> -->
 
             <div class="flex flex-col gap-2">
                 <label for="background" class="max-w-fit">Tiểu sử</label>
                 <textarea
                     name=""
                     id="background"
-                    cols="30"
+                    cols="10"
                     rows="10"
                     class="rounded-lg px-2 py-1 border border-black outline-green-400"
                     v-model="background"
@@ -115,11 +115,14 @@
                     </div>
                 </div>
             </div>
-            <button
-                class="px-4 py-2 bg-green-400 rounded-xl font-bold text-sky-900 hover:cursor-pointer hover:bg-green-500 hover:text-sky-950"
-            >
-                Xác nhận
-            </button>
+
+            <div class="flex justify-center items-center">
+                <button
+                    class="px-4 py-2 bg-green-400 rounded-xl font-bold text-sky-900 hover:cursor-pointer hover:bg-green-500 hover:text-sky-950 "
+                >
+                    Xác nhận
+                </button>
+            </div>
         </form>
         <base-spinner v-if="isLoading"></base-spinner>
     </main>
@@ -227,6 +230,7 @@ export default {
         async handleSubmit() {
             if (this.isValidate) {
                 this.admin.push(this.id);
+                this.isLoading = true
                 await this.uploadImage();
                 const formData = {
                     name: this.familyName.value,
@@ -235,7 +239,6 @@ export default {
                     logo: this.uploadedImage,
                 };
                 try {
-                    this.isLoading = true;
                     await this.$store.dispatch("family/createFamily", formData);
                     console.log("create new family successfully");
                     this.resetForm();

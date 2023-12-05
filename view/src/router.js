@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { defineAsyncComponent } from "vue";
+import store from "./store/index.js";
 
 const HomePage = defineAsyncComponent(() => import("./pages/HomePage.vue"));
 const AuthPage = defineAsyncComponent(() =>
@@ -59,6 +60,7 @@ const router = createRouter({
             path: "/family/manage/:id",
             component: ManageFamily,
             props: true,
+            meta: { requiresAuth: true },
             children: [
                 {
                     path: "/family/manage/:id/created",
@@ -86,6 +88,16 @@ const router = createRouter({
     scrollBehavior() {
         return { top: 0, behavior: "smooth" };
     },
+});
+
+router.beforeEach(function (to, _, next) {
+	if (to.meta.requiresAuth && !store.getters.isAuthenticated) {
+		next("/auth");
+	} else if (to.meta.requiresUnAuth && store.getters.isAuthenticated) {
+		next("/homepage");
+	} else {
+		next();
+	}
 });
 
 export default router;
