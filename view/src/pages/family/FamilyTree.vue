@@ -6,20 +6,20 @@
             <h1
                 class="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl text-sky-900 font-bold"
             >
-                Dòng họ Nguyễn
+                {{ familyTitle }}
             </h1>
             <img
-                src="../../assets/images/logo.png"
+                :src="familyLogo || '../../assets/images/logo.png'"
                 alt="family logo"
-                class="h-24 w-24"
+                class="h-32 w-32"
             />
             <p
                 class="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-sky-900 font-semibold"
             >
-                19 thành viên
+                {{ familyQuantity }} thành viên
             </p>
             <div
-                class="grid grid-cols-3 gap-10 text-xs sm:text-sm md:text-base lg:text-lg"
+                class="grid grid-cols-2 gap-10 text-xs sm:text-sm md:text-base lg:text-lg"
             >
                 <span
                     class="text-center bg-indigo-300 px-4 py-2 rounded-lg text-sky-900 font-bold hover:cursor-pointer hover:bg-indigo-400 hover:text-sky-950"
@@ -41,7 +41,7 @@
                     @click="switchMode('tree')"
                     >Cây gia phả</span
                 >
-                <span
+                <!-- <span
                     class="text-center bg-indigo-300 px-4 py-2 rounded-lg text-sky-900 font-bold hover:cursor-pointer hover:bg-indigo-400 hover:text-sky-950"
                     :class="
                         mode.contribute
@@ -50,12 +50,14 @@
                     "
                     @click="switchMode('contribute')"
                     >Đóng góp</span
-                >
+                > -->
             </div>
         </div>
 
         <!-- mode view info  -->
-        <div></div>
+        <div v-if="mode.info" class="py-10 px-32 text-center w-full">
+            {{ familyBackground }}
+        </div>
 
         <!-- mode view tree  -->
         <div
@@ -96,7 +98,7 @@
                     </div>
 
                     <!-- parent info  -->
-                    <div class="flex flex-col gap-1">
+                    <!-- <div class="flex flex-col gap-1">
                         <h1
                             class="text-xs sm:text-sm md:text-base lg:text-lg text-sky-900 italic"
                         >
@@ -132,7 +134,7 @@
                             class="px-2 py-1 bg-green-300 max-w-fit rounded-lg font-semibold text-sky-900 hover:cursor-pointer hover:bg-green-400"
                             >Thêm</span
                         >
-                    </div>
+                    </div> -->
 
                     <!-- spouse info  -->
                     <div class="flex flex-col gap-1">
@@ -245,6 +247,7 @@
                 @card-click="cardClick"
                 enable-drag="true"
                 :treeHeight="heightOfTree"
+                @update-tree="updateFamilyTree"
             />
         </div>
 
@@ -286,6 +289,11 @@ export default {
                 spouse: [],
                 children: [],
             },
+            familyTitle: "",
+            familyQuantity: "",
+            familyLogo: "",
+            familyBackground: "",
+            family_admin: [],   
         };
     },
     methods: {
@@ -351,6 +359,8 @@ export default {
             return height + 1;
         },
         async getFamilyTree() {
+            console.log("get family tree");
+            this.tree = [];
             // call api
             try {
                 this.isLoading = true;
@@ -358,7 +368,28 @@ export default {
                     "family/getFamilyTree",
                     this.$route.params.id
                 );
-                this.tree.push(family);
+                if(family ) {
+                    this.tree.push(family);
+                }
+            } catch (err) {
+                console.log(err);
+            }
+            this.isLoading = false;
+        },
+        async getFamily() {
+            try {
+                this.isLoading = true;
+                const res = await this.$store.dispatch(
+                    "family/getFamily",
+                    this.$route.params.id
+                );
+                this.familyLogo = res.logo;
+                this.familyQuantity = res.members.length;
+                this.familyTitle = res.name;
+                this.familyBackground = res.background;
+                this.family_admin = res.admin;
+
+
             } catch (err) {
                 console.log(err);
             }
@@ -395,6 +426,7 @@ export default {
                     );
                     console.log("add mem succesfully");
                     this.getFamilyTree();
+                    this.getFamily();
                 } catch (err) {
                     console.log(err);
                 }
@@ -417,6 +449,10 @@ export default {
                     spouse: [],
                     children: [],
                 });
+        },
+        updateFamilyTree() {
+            this.getFamilyTree();
+            this.getFamily()
         },
     },
     computed: {
@@ -467,6 +503,12 @@ export default {
     },
     mounted() {
         this.getFamilyTree();
+        this.getFamily();
     },
+    provide() {
+        return {
+            family_id: this.id,
+        }
+    }
 };
 </script>

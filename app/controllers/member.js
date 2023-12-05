@@ -530,8 +530,47 @@ exports.getMember = async (req, res, next) => {
             error.statusCode = 404;
             throw error;
         }
+        const children = []
+        const spouse = []
+        const parent = []
+
+        for (let i = 0; i < member.children.length; i++) {
+            const child = await Members.findOne({ _id: member.children[i] })
+            children.push({
+                fullname: child.fullname,
+                gender: child.gender
+            })
+        }
+
+        for (let i = 0; i < member.spouse.length; i++) {
+            const sp = await Members.findOne({ _id: member.spouse[i] })
+            spouse.push({
+                fullname: sp.fullname,
+                gender: sp.gender
+            })
+        }
+
+        for (let i = 0; i < member.parent.length; i++) {
+            const par = await Members.findOne({ _id: member.parent[i] })
+            parent.push({
+                fullname: par.fullname,
+                gender: par.gender
+            })
+        }
+
+        const responseData = {
+            _id: member._id,
+            family_id: member.family_id,
+            fullname: member.fullname,
+            gender: member.gender,
+            spouse: spouse,
+            children: children,
+            parent: parent,
+        }
+
         res.status(200).json({
             message: "Lấy thông tin thành viên thành công!",
+            memberInfo: responseData,
             member: member,
         });
     } catch (err) {

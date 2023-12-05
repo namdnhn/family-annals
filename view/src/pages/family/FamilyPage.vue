@@ -166,6 +166,7 @@ export default {
             families: [],
             searchByName: "",
             isLoading: false,
+
         };
     },
     methods: {

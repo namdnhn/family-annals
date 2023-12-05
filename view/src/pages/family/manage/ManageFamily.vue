@@ -21,7 +21,7 @@
                 >
                     Tạo dòng họ mới
                 </router-link>
-                <router-link
+                <!-- <router-link
                     :to="manageMemberLink"
                     class="px-4 py-2 bg-white rounded-lg shadow border text-xs sm:text-sm md:text-base lg:text-lg hover:cursor-pointer hover:text-green-600"
                 >
@@ -32,7 +32,7 @@
                     class="px-4 py-2 bg-white rounded-lg shadow border text-xs sm:text-sm md:text-base lg:text-lg hover:cursor-pointer hover:text-green-600"
                 >
                     Thông tin admin
-                </router-link>
+                </router-link> -->
             </ul>
         </div>
 
