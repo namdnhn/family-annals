@@ -10,12 +10,27 @@ const { width: WIDTH } = Dimensions.get("window");
 const { height: HEIGHT } = Dimensions.get("window");
 
 export default function HomeScreen({ navigation }) {
+  const [data, setData] = useState("");
+  const [dataFetched, setDataFetched] = useState(false);
 
   useEffect(() => {
     async function prepare() {
       await SplashScreen.preventAutoHideAsync();
     }
 
+    const fetchData = async () => {
+      try {
+        const response = await axiosInstance.get("/family/getall");
+        setData(response.data.families);
+        setDataFetched(true);
+      } catch (error) {
+        console.error("Lỗi khi tìm kiếm:", error);
+      }
+    };
+
+    if (!dataFetched) {
+      fetchData();
+    }
     prepare();
   });
 
@@ -62,7 +77,7 @@ export default function HomeScreen({ navigation }) {
             style={{
               fontSize: 19,
               color: "black",
-              fontWeight: "bold"
+              fontWeight: "bold",
             }}
           >
             Chào bạn,
@@ -77,16 +92,49 @@ export default function HomeScreen({ navigation }) {
           </Text>
         </View>
       </View>
-
-      <View>
-        <TouchableOpacity
-          style={styles.edit1}
-          onPress={() => {
-            navigation.navigate("TreeScreen");
-          }}
-        >
-          <Text style={styles.edit2}>TreeScreen</Text>
-        </TouchableOpacity>
+      
+      <View
+        style={{
+          flex: 1,
+          width: WIDTH,
+          backgroundColor: "white",
+        }}
+      >
+        <FlatList
+          data={data}
+          renderItem={({ item }) => (
+            <View>
+              <TouchableOpacity
+                style={{
+                  height: (70 / 800) * HEIGHT,
+                  flexDirection: "row",
+                  width: WIDTH - 40,
+                }}
+                onPress={() => {
+                  navigation.navigate("TreeScreen");
+                }}
+              >
+                <Image
+                  source={logo}
+                  style={{
+                    height: 60,
+                    width: 60,
+                    margin: 20,
+                  }}
+                  resizeMode="cover"
+                />
+                <View>
+                  <Text style={{ marginTop: 25, fontSize: 18, color: "black", fontWeight: "bold" }}>
+                    {item.name}
+                  </Text>
+                  <Text style={{ marginTop: 0, color: "#616161" }}>
+                    {item.members.length} thành viên
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          )}
+        ></FlatList>
       </View>
     </ScrollView>
   );
