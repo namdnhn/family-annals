@@ -12,6 +12,7 @@ const authRoutes = require("./routes/auth");
 const familyRoutes = require("./routes/family");
 const memberRoutes = require("./routes/member");
 const searchRoutes = require("./routes/search");
+const memberDetailRoutes = require("./routes/memberDetail");
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use((req, res, next) => {
 app.use("/auth", authRoutes);
 app.use("/family", familyRoutes);
 app.use("/member", memberRoutes);
+app.use("/memberdetail", memberDetailRoutes);
 app.use("/search", searchRoutes);
 
 app.use((error, req, res, next) => {

@@ -16,10 +16,14 @@ exports.createFamily = async (req, res, next) => {
     }
     const family_name = req.body.name;
     const admin_id = req.body.admin;
+    const background = req.body.background;
+    const logo = req.body.logo;
     try {
         const family = new Families({
             name: family_name,
             admin: [admin_id],
+            background: background,
+            logo: logo,
         });
         const result = await family.save();
         res.status(201).json({
@@ -178,9 +182,11 @@ exports.getFamily = async (req, res, next) => {
             spouseField.push(spouse._id.toString());
         }
         root = {
-            id: root._id.toString(),
-            fullname: root.fullname,
-            gender: root.gender,
+            firstPerson: {
+                id: root._id.toString(),
+                fullname: root.fullname,
+                gender: root.gender,
+            },
             spouse: spouseField,
             children: childrenField,
         };
@@ -267,9 +273,11 @@ async function getTreeFamily(members, root) {
             }
 
             root.children[i] = {
-                id: childMain._id.toString(),
-                fullname: childMain.fullname,
-                gender: childMain.gender,
+                firstPerson: {
+                    id: childMain._id.toString(),
+                    fullname: childMain.fullname,
+                    gender: childMain.gender,
+                },
                 spouse: spouseField,
                 children: childrenField,
             };
