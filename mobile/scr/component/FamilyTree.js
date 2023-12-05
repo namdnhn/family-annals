@@ -94,10 +94,6 @@ export default class FamilyTree extends Component {
   hasChildren(member) {
     return member.children && member.children.length;
   }
-
-  hasSpouse(member) {
-    return member.spouse && member.spouse.length;
-  }
  
   renderTree(data, level) {
     return (
@@ -175,74 +171,6 @@ export default class FamilyTree extends Component {
                     </View>
                   </View>
                 </TouchableOpacity>
-                {this.hasSpouse(item) && (
-                  <Svg height="50" width="20">
-                    <Line
-                      x1="0"
-                      y1="50%"
-                      x2="150"
-                      y2="50%"
-                      stroke={this.props.pathColor}
-                      strokeWidth={this.props.strokeWidth}
-                    />
-                  </Svg>
-                )}
-                {this.hasSpouse(item) &&
-                  item.spouse.map((s, index) => {
-                    const { name, spouse, dob, dod, profile } = s;
-                    const info = { name, spouse, dob, dod, profile };
-                    return (
-                      <TouchableOpacity
-                        onPress={() => this.props.navigation.goBack()}
-                      >
-                        <View
-                          style={{
-                            ...this.props.nodeStyle,
-                          }}
-                        >
-                          <View
-                            style={{
-                              ...this.props.nodeImageStyle,
-                            }}
-                          >
-                            <Image
-                              style={{ ...this.props.imageStyle }}
-                              source={{ uri: info.profile }}
-                            />
-                          </View>
-                          <View style={{ ...this.props.textStyle }}>
-                            <Text
-                              style={{
-                                ...this.props.nodeTitleStyle,
-                                color: this.props.nodeTitleColor,
-                              }}
-                            >
-                              {info.name}
-                              {level}
-                            </Text>
-                            <Text
-                              style={{
-                                ...this.props.nodeInfoStyle,
-                                color: this.props.nodeInfoColor,
-                              }}
-                            >
-                              Sinh: {info.dob}
-                            </Text>
-                            {info.dod ? (
-                              <Text
-                                style={{
-                                  ...this.props.nodeInfoStyle,
-                                  color: this.props.nodeInfoColor,
-                                }}
-                              >
-                                Mất: {info.dod}
-                              </Text>
-                            ) : null}
-                          </View>
-                        </View>
-                      </TouchableOpacity>
-                    );
-                  })}
               </View>
               {this.hasChildren(item) && (
                 <Svg height="50" width="20">

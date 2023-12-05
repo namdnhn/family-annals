@@ -66,5 +66,4 @@ export default function App({ navigation }) {
       </SafeAreaView>
     </Fragment>
   );
-};
-
+}
