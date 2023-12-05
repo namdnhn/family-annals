@@ -2,16 +2,14 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import { Dimensions, Image, TouchableOpacity } from "react-native";
 import { View, Text, ScrollView, FlatList } from "react-native";
-import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { Ionicons } from "@expo/vector-icons";
+import logo from "../../assets/img/logo.png";
 import { axiosInstance } from "../constants/Axios";
 
+const { width: WIDTH } = Dimensions.get("window");
+const { height: HEIGHT } = Dimensions.get("window");
+
 export default function HomeScreen({ navigation }) {
-  const [fontsLoaded] = useFonts({
-    "GentiumBookBasic-Italic": require("./../../assets/fonts/GentiumBookBasic-Italic.ttf"),
-    "Open-san": require("./../../assets/fonts/Montserrat-Bold.ttf"),
-  });
 
   useEffect(() => {
     async function prepare() {
@@ -21,14 +19,37 @@ export default function HomeScreen({ navigation }) {
     prepare();
   });
 
-  if (!fontsLoaded) {
-    return undefined;
-  } else {
-    SplashScreen.hideAsync();
-  }
+  SplashScreen.hideAsync();
 
   return (
     <ScrollView style={styles.container} horizontal={false}>
+      <View style={{ alignItems: "center", paddingTop: 50 }}>
+        <Image
+          source={logo}
+          style={{
+            width: (150 / 360) * WIDTH,
+            height: (165 / 800) * HEIGHT,
+          }}
+        />
+        <Text
+          style={{
+            fontSize: 30,
+            color: "rgb(12, 74, 110)",
+            fontWeight: "bold",
+          }}
+        >
+          Family Annals
+        </Text>
+        <Text
+          style={{
+            fontSize: 20,
+            color: "rgb(12, 74, 110)",
+          }}
+        >
+          Khám phá gia phả dòng họ
+        </Text>
+      </View>
+
       <View
         style={{
           flexDirection: "row",
@@ -39,33 +60,31 @@ export default function HomeScreen({ navigation }) {
         <View style={{ paddingTop: 20, paddingLeft: 20 }}>
           <Text
             style={{
-              fontFamily: "GentiumBookBasic-Italic",
-              fontSize: 20,
-              color: "white",
+              fontSize: 19,
+              color: "black",
+              fontWeight: "bold"
             }}
           >
-            Hello Hoàng Nam,
+            Chào bạn,
           </Text>
           <Text
             style={{
-              fontFamily: "GentiumBookBasic-Italic",
               fontSize: 16,
               color: "gray",
             }}
           >
-            How are you today?
+            Hôm nay bạn thế nào?
           </Text>
         </View>
-        <Ionicons
-          name="notifications"
-          color={"#ffffff"}
-          size={25}
-          style={{ paddingTop: 30, paddingRight: 30 }}
-        />
       </View>
 
       <View>
-        <TouchableOpacity style={styles.edit1} onPress={ () => {navigation.navigate("TreeScreen");} }>
+        <TouchableOpacity
+          style={styles.edit1}
+          onPress={() => {
+            navigation.navigate("TreeScreen");
+          }}
+        >
           <Text style={styles.edit2}>TreeScreen</Text>
         </TouchableOpacity>
       </View>
@@ -76,7 +95,7 @@ export default function HomeScreen({ navigation }) {
 const styles = {
   container: {
     flex: 1,
-    backgroundColor: "black",
+    backgroundColor: "white",
     marginBottom: 45,
     //marginTop: 30,
   },
@@ -183,16 +202,16 @@ const styles = {
     marginBottom: 15,
     height: 40,
     width: 80,
-    backgroundColor: 'black',
+    backgroundColor: "green",
     borderWidth: 1,
-    borderColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 50,
   },
   edit2: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 15
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 15,
   },
 };

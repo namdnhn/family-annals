@@ -40,7 +40,7 @@ export default function MainContainer() {
             return <Ionicons name={iconName} size={size} color={color} />;
           },
           tabBarLabelStyle: { display: "none" },
-          tabBarActiveTintColor: "rgba(221,114,158,1)",
+          tabBarActiveTintColor: "green",
           tabBarInactiveTintColor: "gray",
           tabBarHideOnKeyboard: true,
         })}
