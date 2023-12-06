@@ -102,9 +102,42 @@ exports.getMemberDetail = async (req, res, next) => {
             error.statusCode = 404;
             throw error;
         }
+
+        //convert from dade to string dd//mm/yyyy
+        let formattedDateOfBirth = "";
+        let formattedDateOfDeath = "";
+        if (memberDetail.date_of_birth) {
+            let date_of_birth = memberDetail.date_of_birth;
+            let day = String(date_of_birth.getDate()).padStart(2, "0");
+            let month = String(date_of_birth.getMonth() + 1).padStart(2, "0"); // January is 0!
+            let year = date_of_birth.getFullYear();
+            formattedDateOfBirth = day + "/" + month + "/" + year;
+        }
+        if (memberDetail.date_of_death) {
+            let date_of_death = memberDetail.date_of_death;
+            day = String(date_of_death.getDate()).padStart(2, "0");
+            month = String(date_of_death.getMonth() + 1).padStart(2, "0"); // January is 0!
+            year = date_of_death.getFullYear();
+            formattedDateOfDeath = day + "/" + month + "/" + year;
+        }
+
+        console.log(formattedDateOfBirth);
+        console.log(formattedDateOfDeath);
+
         res.status(200).json({
             message: "Lấy thông tin chi tiết của thành viên thành công!",
-            memberDetail: memberDetail,
+            memberDetail: {
+                _id: memberDetail._id,
+                member_id: memberDetail.member_id,
+                fullname: memberDetail.fullname,
+                gender: memberDetail.gender,
+                date_of_birth: formattedDateOfBirth,
+                place_of_birth: memberDetail.place_of_birth,
+                date_of_death: formattedDateOfDeath,
+                place_of_death: memberDetail.place_of_death,
+                images: memberDetail.images,
+                background_desc: memberDetail.background_desc,
+            },
         });
     } catch (err) {
         if (!err.statusCode) {
