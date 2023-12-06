@@ -247,6 +247,7 @@
                 @card-click="cardClick"
                 enable-drag="true"
                 :treeHeight="heightOfTree"
+                :treeWidth="widthOfTree"
                 @update-tree="updateFamilyTree"
             />
         </div>
@@ -290,10 +291,10 @@ export default {
                 children: [],
             },
             familyTitle: "",
-            familyQuantity: "",
             familyLogo: "",
             familyBackground: "",
-            family_admin: [],   
+            familyQuantity: 0,
+            family_admin: [],
         };
     },
     methods: {
@@ -358,6 +359,26 @@ export default {
             });
             return height + 1;
         },
+        caculateWidthOfTree(root) {
+            if (!root || !root.children || root.children.length === 0) {
+                return 1;
+            }
+            let width = 0;
+            root.children.forEach((child) => {
+                width += this.caculateWidthOfTree(child);
+            });
+            return width;
+        },
+        calculateMembersOfTree(root) {
+            if (!root || !root.children || root.children.length === 0) {
+                return 1;
+            }
+            let members = 1;
+            root.children.forEach((child) => {
+                members += this.calculateMembersOfTree(child);
+            });
+            return members + 1;
+        },
         async getFamilyTree() {
             console.log("get family tree");
             this.tree = [];
@@ -368,7 +389,7 @@ export default {
                     "family/getFamilyTree",
                     this.$route.params.id
                 );
-                if(family ) {
+                if (family) {
                     this.tree.push(family);
                 }
             } catch (err) {
@@ -384,12 +405,10 @@ export default {
                     this.$route.params.id
                 );
                 this.familyLogo = res.logo;
-                this.familyQuantity = res.members.length;
                 this.familyTitle = res.name;
+                this.familyQuantity = res.members.length;
                 this.familyBackground = res.background;
                 this.family_admin = res.admin;
-
-
             } catch (err) {
                 console.log(err);
             }
@@ -452,12 +471,18 @@ export default {
         },
         updateFamilyTree() {
             this.getFamilyTree();
-            this.getFamily()
+            this.getFamily();
         },
     },
     computed: {
         heightOfTree() {
             return this.calculateHeightOfTree(this.tree[0]) * 250;
+        },
+        membersQuantity() {
+            return this.calculateMembersOfTree(this.tree[0]);
+        },
+        widthOfTree() {
+            return this.caculateWidthOfTree(this.tree[0]) * 250;
         },
         validateInital() {
             if (this.user_fullname === "") {
@@ -508,7 +533,7 @@ export default {
     provide() {
         return {
             family_id: this.id,
-        }
-    }
+        };
+    },
 };
 </script>

@@ -70,6 +70,10 @@ export default {
             type: Number,
             required: true,
         },
+        treeWidth: {
+            type: Number,
+            required: true,
+        },
     },
     data() {
         return {
