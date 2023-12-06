@@ -121,9 +121,6 @@ exports.getMemberDetail = async (req, res, next) => {
             formattedDateOfDeath = day + "/" + month + "/" + year;
         }
 
-        console.log(formattedDateOfBirth);
-        console.log(formattedDateOfDeath);
-
         res.status(200).json({
             message: "Lấy thông tin chi tiết của thành viên thành công!",
             memberDetail: {

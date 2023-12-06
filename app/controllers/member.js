@@ -272,8 +272,18 @@ async function updateMemField(current_mem, field, field_data) {
                 throw error;
             }
 
+            //khi một member bị xóa thì phải xóa vợ của nó trong family
+            if (member.spouse.length > 0) {
+                for (let i = 0; i < member.spouse.length; i++) {
+                    await deleteMemberFromFamily(
+                        current_mem.family_id,
+                        member.spouse[i]
+                    );
+                }
+            }
+
             //delete in families collection
-            deleteMemberFromFamily(current_mem.family_id, deletedIds[i])
+            deleteMemberFromFamily(current_mem.family_id, deletedIds[i]);
 
             //delete in other document
             const collectionsToUpdate = ["parent", "children", "spouse"];
@@ -481,7 +491,7 @@ exports.deleteMember = async (req, res, next) => {
         }
 
         //delete in families collection
-        await deleteMemberFromFamily(member.family_id, member._id)
+        await deleteMemberFromFamily(member.family_id, member._id);
 
         //delete in other document
         const collectionsToUpdate = ["parent", "children", "spouse"];
@@ -530,32 +540,32 @@ exports.getMember = async (req, res, next) => {
             error.statusCode = 404;
             throw error;
         }
-        const children = []
-        const spouse = []
-        const parent = []
+        const children = [];
+        const spouse = [];
+        const parent = [];
 
         for (let i = 0; i < member.children.length; i++) {
-            const child = await Members.findOne({ _id: member.children[i] })
+            const child = await Members.findOne({ _id: member.children[i] });
             children.push({
                 fullname: child.fullname,
-                gender: child.gender
-            })
+                gender: child.gender,
+            });
         }
 
         for (let i = 0; i < member.spouse.length; i++) {
-            const sp = await Members.findOne({ _id: member.spouse[i] })
+            const sp = await Members.findOne({ _id: member.spouse[i] });
             spouse.push({
                 fullname: sp.fullname,
-                gender: sp.gender
-            })
+                gender: sp.gender,
+            });
         }
 
         for (let i = 0; i < member.parent.length; i++) {
-            const par = await Members.findOne({ _id: member.parent[i] })
+            const par = await Members.findOne({ _id: member.parent[i] });
             parent.push({
                 fullname: par.fullname,
-                gender: par.gender
-            })
+                gender: par.gender,
+            });
         }
 
         const responseData = {
@@ -566,7 +576,7 @@ exports.getMember = async (req, res, next) => {
             spouse: spouse,
             children: children,
             parent: parent,
-        }
+        };
 
         res.status(200).json({
             message: "Lấy thông tin thành viên thành công!",
