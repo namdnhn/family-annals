@@ -4,83 +4,53 @@ import PropTypes from "prop-types";
 import Svg, { Line } from "react-native-svg";
 const Sample = [
   {
-    _comment: "Rethinam and Family",
-    name: "Rethinam",
+    id: "656edbcc0c20bdb041e073fa",
+    fullname: "Nguyen Van A",
+    gender: "Nam",
+    dob: "2003-11-28",
+    dod: "",
     spouse: [
       {
-        _comment: "AmalRaj and Family",
-        name: "AmalRaj",
-        dob: "03/03/1925",
-        dod: null,
-        order: 1,
-        profile:
-          "https://images.unsplash.com/photo-1520206444322-d2df0dd4e78e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80",
+        id: "656edbce0c20bdb041e07400",
+        fullname: "Nguyen Thi B",
+        gender: "Nữ",
+        dob: "",
+        dod: "",
       },
     ],
-    dob: "03/03/1925",
-    dod: null,
-    profile:
-      "https://images.unsplash.com/photo-1520206444322-d2df0dd4e78e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80",
     children: [
       {
-        _comment: "AmalRaj and Family",
-        name: "AmalRaj",
+        id: "656f334e75c24242efd927b3",
+        fullname: "Nguyen Thi P",
+        gender: "Nữ",
+        dob: "",
+        dod: "",
+        spouse: [],
+        children: [],
+      },
+      {
+        id: "656f334f75c24242efd927b5",
+        fullname: "Nguyễn Văn Hoàng",
+        gender: "Nam",
+        dob: "",
+        dod: "",
         spouse: [
           {
-            _comment: "AmalRaj and Family",
-            name: "AmalRaj",
-            dob: "03/03/1925",
-            dod: null,
-            order: 1,
-            profile:
-              "https://images.unsplash.com/photo-1520206444322-d2df0dd4e78e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80",
+            id: "656f33c675c24242efd927c1",
+            fullname: "Hoàng Thị Hồng",
+            gender: "Nữ",
+            dob: "",
+            dod: "",
+          },
+          {
+            id: "656f33c675c24242efd927c3",
+            fullname: "Hoàng Thị Hà",
+            gender: "Nữ",
+            dob: "2001-12-12",
+            dod: "",
           },
         ],
-        dob: "03/03/1925",
-        dod: null,
-        order: 1,
-        profile:
-          "https://images.unsplash.com/photo-1520206444322-d2df0dd4e78e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80",
-      },
-      {
-        _comment: "ArokiyaRaj and Family",
-        name: "ArokiyaRaj",
-        spouse: null,
-        dob: "03/03/1925",
-        dod: "03/03/2017",
-        order: 2,
-        profile:
-          "https://images.unsplash.com/photo-1520206444322-d2df0dd4e78e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80",
-      },
-      {
-        _comment: "Leema and Family",
-        name: "Leema Rose Mary",
-        spouse: null,
-        dob: "03/03/1925",
-        dod: null,
-        order: 3,
-        profile:
-          "https://images.unsplash.com/photo-1520206444322-d2df0dd4e78e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80",
-      },
-      {
-        _comment: "ChristhuRaj and Family",
-        name: "ChristhuRaj",
-        spouse: null,
-        dob: "03/03/1925",
-        dod: null,
-        order: 4,
-        profile:
-          "https://images.unsplash.com/photo-1520206444322-d2df0dd4e78e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80",
-      },
-      {
-        _comment: "Gunaseeli and Family",
-        name: "Gunaseeli",
-        spouse: null,
-        dob: "06/01/1975",
-        dod: null,
-        order: 5,
-        profile:
-          "https://images.unsplash.com/photo-1520206444322-d2df0dd4e78e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80",
+        children: [],
       },
     ],
   },
@@ -92,21 +62,21 @@ export default class FamilyTree extends Component {
   }
 
   hasChildren(member) {
-    return member.children && member.children.length;
+    return member.children && member.children.length > 0;
   }
- 
+
   renderTree(data, level) {
     return (
       <FlatList
         data={data}
         horizontal={true}
         contentContainerStyle={{ padding: 50 }}
-        keyExtractor={(item, index) => `${item.name} + ${item.spouse}`}
-        listKey={(item, index) => `${item.name} + ${item.spouse}`}
+        keyExtractor={(item, index) => `${item.fullname} + ${item.spouse}`}
+        listKey={(item, index) => `${item.fullname} + ${item.spouse}`}
         initialScrollIndex={0}
         renderItem={({ item, index }) => {
-          const { name, spouse, dob, dod, profile } = item;
-          const info = { name, spouse, dob, dod, profile };
+          const { fullname, spouse, dob, dod, image } = item;
+          const info = { fullname, spouse, dob, dod, image };
           return (
             <View
               style={{
@@ -137,7 +107,7 @@ export default class FamilyTree extends Component {
                     >
                       <Image
                         style={{ ...this.props.imageStyle }}
-                        source={{ uri: info.profile }}
+                        source={{ uri: info.image }}
                       />
                     </View>
                     <View style={{ ...this.props.textStyle }}>
@@ -147,17 +117,18 @@ export default class FamilyTree extends Component {
                           color: this.props.nodeTitleColor,
                         }}
                       >
-                        {info.name}
-                        {level}
+                        {info.fullname}
                       </Text>
-                      <Text
-                        style={{
-                          ...this.props.nodeInfoStyle,
-                          color: this.props.nodeInfoColor,
-                        }}
-                      >
-                        Sinh: {info.dob}
-                      </Text>
+                      {info.dob ? (
+                        <Text
+                          style={{
+                            ...this.props.nodeInfoStyle,
+                            color: this.props.nodeInfoColor,
+                          }}
+                        >
+                          Sinh: {info.dob}
+                        </Text>
+                      ) : null}
                       {info.dod ? (
                         <Text
                           style={{
@@ -191,11 +162,11 @@ export default class FamilyTree extends Component {
               >
                 {this.hasChildren(item) &&
                   item.children.map((child, index) => {
-                    const { name, spouse, dob, dod, profile } = child;
-                    const info = { name, spouse, dob, dod, profile };
+                    const { fullname, spouse, dob, dod, image } = child;
+                    const info = { fullname, spouse, dob, dod, image };
                     return (
                       <View
-                        key={child.name + child.spouse}
+                        key={child.fullname + child.spouse}
                         style={{
                           flexDirection: "row",
                         }}

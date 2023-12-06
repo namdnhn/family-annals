@@ -226,11 +226,16 @@ exports.getFamilyTree = async (req, res, next) => {
       (member) => member.parent.length === 0 || !member.parent
     );
 
+    var root_dob = "";
+    var root_dod = "";
+    var root_image = "";
     const rootDetail = await MemberDetail.findOne({ member_id: root._id });
     if (!rootDetail) {
       const error = new Error("Không tìm thấy thông tin thành viên");
-      error.statusCode = 404;
-      throw error;
+    } else {
+      root_dob = rootDetail.date_of_birth;
+      root_dod = rootDetail.date_of_death;
+      root_image = rootDetail.images;
     }
 
     let childrenField = [];
@@ -261,10 +266,10 @@ exports.getFamilyTree = async (req, res, next) => {
       id: root._id.toString(),
       fullname: root.fullname,
       gender: root.gender,
-      dob: rootDetail.date_of_birth,
-      dod: rootDetail.date_of_death,
+      dob: root_dob,
+      dod: root_dod,
       image:
-        rootDetail.images ||
+        root_image ||
         "https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere-thumbnail.png",
       spouse: spouseField,
       children: childrenField,
@@ -295,23 +300,29 @@ async function getTreeFamily2(members, root) {
       throw error;
     }
 
-    const objectIdMemberId = new mongoose.Types.ObjectId(spouse.id);
+    console.log("Spouse", spouse);
+
     const spouseDetail = await MemberDetail.findOne({
-      member_id: objectIdMemberId,
+      member_id: spouse._id,
     });
+    var spouse_dob = "";
+    var spouse_dod = "";
+    var spouse_image = "";
     if (!spouseDetail) {
       const error = new Error("Không tìm thấy thông tin thành viên");
-      error.statusCode = 404;
-      throw error;
+    } else {
+      spouse_dob = spouseDetail.date_of_birth;
+      spouse_dod = spouseDetail.date_of_death;
+      spouse_image = spouseDetail.images;
     }
     root.spouse[i] = {
       id: spouse._id.toString(),
       fullname: spouse.fullname,
       gender: spouse.gender,
-      dob: spouseDetail.date_of_birth,
-      dod: spouseDetail.date_of_death,
+      dob: spouse_dob,
+      dod: spouse_dod,
       image:
-        spouseDetail.images ||
+        spouse_image ||
         "https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere-thumbnail.png",
     };
   }
@@ -328,16 +339,19 @@ async function getTreeFamily2(members, root) {
         error.statusCode = 404;
         throw error;
       }
-      console.log("Childmain", childMain);
 
-      //   const objectIdMemberId = new mongoose.Types.ObjectId(childMain._id);
+      var child_dob = "";
+      var child_dod = "";
+      var child_image = "";
       const childDetail = await MemberDetail.findOne({
         member_id: childMain._id,
       });
       if (!childDetail) {
         const error = new Error("Không tìm thấy thông tin thành viên");
-        error.statusCode = 404;
-        throw error;
+      } else {
+        child_dob = childDetail.date_of_birth;
+        child_dod = childDetail.date_of_death;
+        child_image = childDetail.images;
       }
 
       //children cua thang childMain
@@ -371,10 +385,10 @@ async function getTreeFamily2(members, root) {
         id: childMain._id.toString(),
         fullname: childMain.fullname,
         gender: childMain.gender,
-        dob: childDetail.date_of_birth,
-        dod: childDetail.date_of_death,
+        dob: child_dob,
+        dod: child_dod,
         image:
-          childDetail.images ||
+          child_image ||
           "https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere-thumbnail.png",
         spouse: spouseField,
         children: childrenField,

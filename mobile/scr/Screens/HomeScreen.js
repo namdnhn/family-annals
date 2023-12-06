@@ -23,6 +23,7 @@ export default function HomeScreen({ navigation }) {
         const response = await axiosInstance.get("/family/getall");
         setData(response.data.families);
         setDataFetched(true);
+        console.log(data);
       } catch (error) {
         console.error("Lỗi khi tìm kiếm:", error);
       }
@@ -37,7 +38,7 @@ export default function HomeScreen({ navigation }) {
   SplashScreen.hideAsync();
 
   return (
-    <ScrollView style={styles.container} horizontal={false}>
+    <>
       <View style={{ alignItems: "center", paddingTop: 50 }}>
         <Image
           source={logo}
@@ -64,7 +65,6 @@ export default function HomeScreen({ navigation }) {
           Khám phá gia phả dòng họ
         </Text>
       </View>
-
       <View
         style={{
           flexDirection: "row",
@@ -92,7 +92,6 @@ export default function HomeScreen({ navigation }) {
           </Text>
         </View>
       </View>
-      
       <View
         style={{
           flex: 1,
@@ -111,11 +110,11 @@ export default function HomeScreen({ navigation }) {
                   width: WIDTH - 40,
                 }}
                 onPress={() => {
-                  navigation.navigate("TreeScreen");
+                  navigation.navigate("TreeScreen", { s_id: item._id });
                 }}
               >
                 <Image
-                  source={logo}
+                  source={{ uri: item.logo }}
                   style={{
                     height: 60,
                     width: 60,
@@ -124,7 +123,14 @@ export default function HomeScreen({ navigation }) {
                   resizeMode="cover"
                 />
                 <View>
-                  <Text style={{ marginTop: 25, fontSize: 18, color: "black", fontWeight: "bold" }}>
+                  <Text
+                    style={{
+                      marginTop: 25,
+                      fontSize: 18,
+                      color: "black",
+                      fontWeight: "bold",
+                    }}
+                  >
                     {item.name}
                   </Text>
                   <Text style={{ marginTop: 0, color: "#616161" }}>
@@ -136,7 +142,7 @@ export default function HomeScreen({ navigation }) {
           )}
         ></FlatList>
       </View>
-    </ScrollView>
+    </>
   );
 }
 

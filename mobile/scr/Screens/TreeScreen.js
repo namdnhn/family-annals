@@ -1,5 +1,5 @@
 import FamilyTree from "../component/FamilyTree";
-import React, { Fragment } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -8,8 +8,28 @@ import {
   Text,
   StatusBar,
 } from "react-native";
+import { axiosInstance } from "../constants/Axios";
 
-export default function App({ navigation }) {
+export default function App({ navigation, route }) {
+  const {s_id} = route.params;
+  console.log(s_id);
+  const [data, setData] = useState("");
+  const [dataFetched, setDataFetched] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axiosInstance.get(`/family/getftree/${s_id}`);
+        setData(response.data.familyTree);
+        setDataFetched(true);
+      } catch (error) {
+        console.error("Lỗi khi tìm kiếm:", error);
+      }
+    };
+    if (!dataFetched) {
+      fetchData();
+    }
+  });
   console.disableYellowBox = true;
   return (
     <Fragment>
@@ -20,6 +40,7 @@ export default function App({ navigation }) {
             title="Rethinam and Family"
             pathColor="black"
             siblingGap={10}
+            data={data}
             navigation={navigation}
             nodeStyle={{
               width: 100,
