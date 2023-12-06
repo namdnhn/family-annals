@@ -158,7 +158,7 @@
                                 type="date"
                                 id="dob"
                                 class="border border-green-500 rounded-lg outline-green-700 px-2 py-1"
-                                v-model="this.memberDetail.date_of_birth"
+                                v-model="this.inputDateOfBirth"
                             />
                         </span>
 
@@ -182,7 +182,7 @@
                                 type="date"
                                 id="dod"
                                 class="border border-green-500 rounded-lg outline-green-700 px-2 py-1"
-                                v-model="this.memberDetail.date_of_death"
+                                v-model="this.inputDateOfDeath"
                             />
                         </span>
 
@@ -536,7 +536,7 @@ export default {
             required: true,
         },
     },
-    inject: ['family_id'],
+    inject: ["family_id"],
     emits: ["update-tree"],
     data() {
         return {
@@ -575,7 +575,9 @@ export default {
             isValid: false,
             invalidMessage: "",
             admin: [],
-            userId: ""
+            userId: "",
+            inputDateOfBirth: "",
+            inputDateOfDeath: "",
         };
     },
     emits: ["close"],
@@ -645,9 +647,13 @@ export default {
                 this.isLoading = true;
                 await this.uploadImage();
                 try {
+                    console.log(this.inputDateOfBirth);
+                    console.log(this.inputDateOfDeath);
                     const formData = {
                         member_id: this.id,
                         ...this.memberDetail,
+                        date_of_birth: this.inputDateOfBirth,
+                        date_of_death: this.inputDateOfDeath,
                     };
 
                     await this.$store.dispatch(
@@ -741,7 +747,47 @@ export default {
                     }
                 );
                 console.log("get member detail success");
-                console.log(this.memberDetail);
+                console.log(this.memberDetail.date_of_birth);
+
+                if (this.memberDetail.date_of_birth) {
+                    let parts = this.memberDetail.date_of_birth.split("/");
+                    let dateOfBirth = new Date(
+                        parts[2],
+                        parts[1] - 1,
+                        parts[0]
+                    );
+                    let day = String(dateOfBirth.getDate()).padStart(2, "0");
+                    let month = String(dateOfBirth.getMonth() + 1).padStart(
+                        2,
+                        "0"
+                    ); // January is 0!
+                    let year = dateOfBirth.getFullYear();
+                    let formattedDate = `${year}-${month}-${day}`;
+
+                    this.inputDateOfBirth = formattedDate;
+                }
+
+                if (this.memberDetail.date_of_death) {
+                    let partsDeath = this.memberDetail.date_of_death.split("/");
+                    let dateOfDeath = new Date(
+                        partsDeath[2],
+                        partsDeath[1] - 1,
+                        partsDeath[0]
+                    );
+
+                    let dayDeath = String(dateOfDeath.getDate()).padStart(
+                        2,
+                        "0"
+                    );
+                    let monthDeath = String(
+                        dateOfDeath.getMonth() + 1
+                    ).padStart(2, "0"); // January is 0!
+                    let yearDeath = dateOfDeath.getFullYear();
+
+                    let formattedDateDeath = `${yearDeath}-${monthDeath}-${dayDeath}`;
+
+                    this.inputDateOfDeath = formattedDateDeath;
+                }
             } catch (err) {
                 console.log(err);
             }
@@ -775,7 +821,7 @@ export default {
                     "family/getFamily",
                     this.family_id
                 );
-                this.admin = res.admin
+                this.admin = res.admin;
             } catch (err) {
                 console.log(err);
             }

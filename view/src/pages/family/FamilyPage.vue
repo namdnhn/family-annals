@@ -124,12 +124,15 @@
             </div>
 
             <!-- Result bar  -->
-            <div class="basis-2/3 border px-4 py-2 flex flex-col gap-4">
-                <p
-                    class="text-xs md:text-sm lg:text-base text-sky-900 font-semibold mb-2"
-                >
-                    {{ families.length }} kết quả
-                </p>
+            <div class="basis-2/3 border px-4 py-2 flex flex-col justify-between gap-4">
+                <div class="flex items-center justify-between">
+                    <p
+                        class="text-xs md:text-sm lg:text-base text-sky-900 font-semibold mb-2"
+                    >
+                        {{ totalItems }} kết quả
+                    </p>
+                    <p>Trang {{ currentPage }}</p>
+                </div>
                 <family-card
                     v-for="family in families"
                     :key="family._id"
@@ -137,6 +140,17 @@
                     :members_quantity="family.members.length"
                     :name="family.name"
                 ></family-card>
+
+                <div class="flex justify-center items-center gap-4">
+                    <span
+                        v-for="page in totalPages"
+                        :key="page"
+                        class="bg-green-300 px-4 py-2 rounded hover:cursor-pointer text-sky-900 hover:bg-green-400"
+                        :class="currentPage === page ? 'bg-green-500' : ''"
+                        @click="changePage(page)"
+                        >{{ page }}</span
+                    >
+                </div>
             </div>
         </div>
         <base-spinner v-if="isLoading"></base-spinner>
@@ -166,7 +180,11 @@ export default {
             families: [],
             searchByName: "",
             isLoading: false,
-
+            page: 1,
+            itemsPerPage: 5,
+            totalItems: 0,
+            totalPages: 0,
+            currentPage: 1,
         };
     },
     methods: {
@@ -222,11 +240,23 @@ export default {
         async getFamilies() {
             try {
                 this.isLoading = true;
-                this.families = await this.$store.dispatch(
-                    "family/getFamilies"
+                // this.families = await this.$store.dispatch(
+                //     "family/getFamilies"
+                // );
+                // console.log("get all family success");
+                // console.log(this.families);
+                const res = await this.$store.dispatch(
+                    "family/getFamiliesByPage",
+                    {
+                        page: this.page,
+                        itemsPerPage: this.itemsPerPage,
+                    }
                 );
-                console.log("get all family success");
-                console.log(this.families);
+                this.families = res.families;
+                this.totalItems = res.totalItems;
+                this.currentPage = res.currentPage;
+                this.totalPages = res.totalPages;
+                console.log(res);
             } catch (err) {
                 console.log(err);
             }
@@ -278,8 +308,11 @@ export default {
                     this.families.reverse();
                 }
             }
-            console.log("handle search success");
         },
+        changePage(page) {
+            this.page = page;
+            this.getFamilies();
+        }
     },
     mounted() {
         this.getFamilies();
