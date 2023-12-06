@@ -15,7 +15,7 @@ const memberDetailSchema = new mongoose.Schema({
         required: true,
     },
     date_of_birth: {
-        type: String,
+        type: Date,
         required: false,
     },
     place_of_birth: {
@@ -23,7 +23,7 @@ const memberDetailSchema = new mongoose.Schema({
         required: false,
     },
     date_of_death: {
-        type: String,
+        type: Date,
         required: false,
     },
     place_of_death: {
