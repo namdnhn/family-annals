@@ -96,11 +96,33 @@ exports.getMemberDetail = async (req, res, next) => {
             member_id: member_id,
         });
         if (!memberDetail) {
-            const error = new Error(
-                "Không tìm thấy thông tin chi tiết của thành viên!"
-            );
-            error.statusCode = 404;
-            throw error;
+            const member = await Members.findOne({
+                _id: member_id,
+            });
+            if (!member) {
+                const error = new Error(
+                    "Không tìm thấy thông tin chi tiết của thành viên!"
+                );
+                error.statusCode = 404;
+                throw error;
+            }
+            res.status(200).json({
+                message: "Lấy thông tin chi tiết của thành viên thành công!",
+                memberDetail: {
+                    _id: member._id,
+                    member_id: member.member_id,
+                    fullname: member.fullname,
+                    gender: member.gender,
+                    date_of_birth: "",
+                    place_of_birth: "",
+                    date_of_death: "",
+                    place_of_death: "",
+                    images:
+                        member.images ||
+                        "https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere-thumbnail.png",
+                    background_desc: "",
+                },
+            });
         }
 
         //convert from dade to string dd//mm/yyyy
