@@ -23,7 +23,6 @@ export default function HomeScreen({ navigation }) {
         const response = await axiosInstance.get("/family/getall");
         setData(response.data.families);
         setDataFetched(true);
-        console.log(data);
       } catch (error) {
         console.error("Lỗi khi tìm kiếm:", error);
       }
@@ -114,7 +113,7 @@ export default function HomeScreen({ navigation }) {
                 }}
               >
                 <Image
-                  source={{ uri: item.logo }}
+                  source={ item.logo ? { uri: item.logo } : logo }
                   style={{
                     height: 60,
                     width: 60,

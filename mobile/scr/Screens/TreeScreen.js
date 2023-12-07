@@ -12,8 +12,7 @@ import { axiosInstance } from "../constants/Axios";
 
 export default function App({ navigation, route }) {
   const {s_id} = route.params;
-  console.log(s_id);
-  const [data, setData] = useState("");
+  const [data, setData] = useState([]);
   const [dataFetched, setDataFetched] = useState(false);
 
   useEffect(() => {

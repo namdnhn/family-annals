@@ -75,8 +75,8 @@ export default class FamilyTree extends Component {
         listKey={(item, index) => `${item.fullname} + ${item.spouse}`}
         initialScrollIndex={0}
         renderItem={({ item, index }) => {
-          const { fullname, spouse, dob, dod, image } = item;
-          const info = { fullname, spouse, dob, dod, image };
+          const { id, fullname, spouse, dob, dod, image } = item;
+          const info = { id, fullname, spouse, dob, dod, image };
           return (
             <View
               style={{
@@ -93,7 +93,7 @@ export default class FamilyTree extends Component {
                 }}
               >
                 <TouchableOpacity
-                  onPress={() => this.props.navigation.goBack()}
+                  onPress={() => this.props.navigation.navigate("DetailMember", {s_id: info.id })}
                 >
                   <View
                     style={{
