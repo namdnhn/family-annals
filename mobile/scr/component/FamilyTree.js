@@ -70,13 +70,21 @@ export default class FamilyTree extends Component {
       <FlatList
         data={data}
         horizontal={true}
-        contentContainerStyle={{ padding: 50 }}
+        contentContainerStyle={{ paddingHorizontal: "25%" }}
         keyExtractor={(item, index) => `${item.fullname} + ${item.spouse}`}
         listKey={(item, index) => `${item.fullname} + ${item.spouse}`}
         initialScrollIndex={0}
         renderItem={({ item, index }) => {
           const { id, fullname, spouse, dob, dod, image } = item;
           const info = { id, fullname, spouse, dob, dod, image };
+          var date_of_birth = "";
+          if (info.dob){
+            date_of_birth = new Date(info.dob);
+          }
+          var date_of_dead = "";
+          if (info.dod){
+            date_of_dead = new Date(info.dod);
+          }
           return (
             <View
               style={{
@@ -126,7 +134,7 @@ export default class FamilyTree extends Component {
                             color: this.props.nodeInfoColor,
                           }}
                         >
-                          Sinh: {info.dob}
+                          Sinh: {date_of_birth.toLocaleDateString('en-GB')}
                         </Text>
                       ) : null}
                       {info.dod ? (
@@ -136,7 +144,7 @@ export default class FamilyTree extends Component {
                             color: this.props.nodeInfoColor,
                           }}
                         >
-                          Mất: {info.dod}
+                          Mất: {date_of_dead.toLocaleDateString('en-GB')}
                         </Text>
                       ) : null}
                     </View>
@@ -251,10 +259,11 @@ export default class FamilyTree extends Component {
 FamilyTree.defaultProps = {
   title: "My Family Tree",
   titleStyle: {
-    fontSize: 16,
+    fontSize: 23,
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 20,
+    marginTop: 20,
   },
   titleColor: "black",
   data: Sample,

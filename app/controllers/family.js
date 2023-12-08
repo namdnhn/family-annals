@@ -261,21 +261,10 @@ exports.getFamilyTree = async (req, res, next) => {
         const rootDetail = await MemberDetail.findOne({ member_id: root._id });
         if (rootDetail) {
             if (rootDetail.date_of_birth) {
-                let date_of_birth = rootDetail.date_of_birth;
-                let day = String(date_of_birth.getDate()).padStart(2, "0");
-                let month = String(date_of_birth.getMonth() + 1).padStart(
-                    2,
-                    "0"
-                ); // January is 0!
-                let year = date_of_birth.getFullYear();
-                root_dob = day + "/" + month + "/" + year;
+                root_dob = rootDetail.date_of_birth;
             }
             if (rootDetail.date_of_death) {
-                let date_of_death = rootDetail.date_of_death;
-                day = String(date_of_death.getDate()).padStart(2, "0");
-                month = String(date_of_death.getMonth() + 1).padStart(2, "0"); // January is 0!
-                year = date_of_death.getFullYear();
-                root_dod = day + "/" + month + "/" + year;
+                root_dod = rootDetail.date_of_death;
             }
             root_image = rootDetail.images;
         }
@@ -345,21 +334,10 @@ async function getTreeFamily2(members, root) {
             var spouse_image = "";
             if (spouseDetail) {
                 if (spouseDetail.date_of_birth) {
-                    let date_of_birth = spouseDetail.date_of_birth;
-                    let day = String(date_of_birth.getDate()).padStart(2, "0");
-                    let month = String(date_of_birth.getMonth() + 1).padStart(
-                        2,
-                        "0"
-                    ); // January is 0!
-                    let year = date_of_birth.getFullYear();
-                    spouse_dob = day + "/" + month + "/" + year;
+                    spouse_dob = spouseDetail.date_of_birth;
                 }
                 if (spouseDetail.date_of_death) {
-                    let date_of_death = spouseDetail.date_of_death;
-                    day = String(date_of_death.getDate()).padStart(2, "0");
-                    month = String(date_of_death.getMonth() + 1).padStart(2, "0"); // January is 0!
-                    year = date_of_death.getFullYear();
-                    spouse_dod = day + "/" + month + "/" + year;
+                    spouse_dod = spouseDetail.date_of_death;
                 }
                 spouse_image = spouseDetail.images;
             }
@@ -394,21 +372,10 @@ async function getTreeFamily2(members, root) {
                 });
                 if (childDetail) {
                     if (childDetail.date_of_birth) {
-                        let date_of_birth = childDetail.date_of_birth;
-                        let day = String(date_of_birth.getDate()).padStart(2, "0");
-                        let month = String(date_of_birth.getMonth() + 1).padStart(
-                            2,
-                            "0"
-                        ); // January is 0!
-                        let year = date_of_birth.getFullYear();
-                        child_dob = day + "/" + month + "/" + year;
+                        child_dob = childDetail.date_of_birth;
                     }
                     if (childDetail.date_of_death) {
-                        let date_of_death = childDetail.date_of_death;
-                        day = String(date_of_death.getDate()).padStart(2, "0");
-                        month = String(date_of_death.getMonth() + 1).padStart(2, "0"); // January is 0!
-                        year = date_of_death.getFullYear();
-                        child_dod = day + "/" + month + "/" + year;
+                        child_dod = childDetail.date_of_death;
                     }
                     child_image = childDetail.images;
                 }

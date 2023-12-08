@@ -22,6 +22,7 @@ export default function HomeScreen({ navigation }) {
       try {
         const response = await axiosInstance.get("/family/getall");
         setData(response.data.families);
+        console.log(data);
         setDataFetched(true);
       } catch (error) {
         console.error("Lỗi khi tìm kiếm:", error);
@@ -109,7 +110,7 @@ export default function HomeScreen({ navigation }) {
                   width: WIDTH - 40,
                 }}
                 onPress={() => {
-                  navigation.navigate("TreeScreen", { s_id: item._id });
+                  navigation.navigate("TreeScreen", { s_id: item._id, name: item.name });
                 }}
               >
                 <Image

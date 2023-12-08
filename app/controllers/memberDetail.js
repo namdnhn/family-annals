@@ -168,3 +168,64 @@ exports.getMemberDetail = async (req, res, next) => {
         next(err);
     }
 };
+
+exports.getMemberDetail2 = async (req, res, next) => {
+    const member_id = req.params.id;
+    try {
+        const memberDetail = await MemberDetails.findOne({
+            member_id: member_id,
+        });
+        if (!memberDetail) {
+            const member = await Members.findOne({
+                _id: member_id,
+            });
+            if (!member) {
+                const error = new Error(
+                    "Không tìm thấy thông tin chi tiết của thành viên!"
+                );
+                error.statusCode = 404;
+                throw error;
+            }
+            res.status(200).json({
+                message: "Lấy thông tin chi tiết của thành viên thành công!",
+                memberDetail: {
+                    _id: member._id,
+                    member_id: member.member_id,
+                    fullname: member.fullname,
+                    gender: member.gender,
+                    date_of_birth: "",
+                    place_of_birth: "",
+                    date_of_death: "",
+                    place_of_death: "",
+                    images:
+                        member.images ||
+                        "https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere-thumbnail.png",
+                    background_desc: "",
+                },
+            });
+        } else {
+            //convert from dade to string dd//mm/yyyy
+
+            res.status(200).json({
+                message: "Lấy thông tin chi tiết của thành viên thành công!",
+                memberDetail: {
+                    _id: memberDetail._id,
+                    member_id: memberDetail.member_id,
+                    fullname: memberDetail.fullname,
+                    gender: memberDetail.gender,
+                    date_of_birth: memberDetail.date_of_birth,
+                    place_of_birth: memberDetail.place_of_birth,
+                    date_of_death: memberDetail.date_of_death,
+                    place_of_death: memberDetail.place_of_death,
+                    images: memberDetail.images,
+                    background_desc: memberDetail.background_desc,
+                },
+            });
+        }
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
