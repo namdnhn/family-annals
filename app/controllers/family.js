@@ -315,12 +315,13 @@ exports.getFamilyTree = async (req, res, next) => {
         var root_dod = "";
         var root_image = "";
         const rootDetail = await MemberDetail.findOne({ member_id: root._id });
-        if (!rootDetail) {
-            const error = new Error("Không tìm thấy thông tin thành viên");
-            throw error;
-        } else {
-            root_dob = rootDetail.date_of_birth;
-            root_dod = rootDetail.date_of_death;
+        if (rootDetail) {
+            if (rootDetail.date_of_birth) {
+                root_dob = rootDetail.date_of_birth;
+            }
+            if (rootDetail.date_of_death) {
+                root_dod = rootDetail.date_of_death;
+            }
             root_image = rootDetail.images;
         }
 
@@ -334,7 +335,7 @@ exports.getFamilyTree = async (req, res, next) => {
                 if (!child) {
                     continue;
                 }
-                childrenField.push(child._id.toString());
+              childrenField.push(child._id.toString());
             }
         }
         let spouseField = [];
@@ -382,38 +383,35 @@ async function getTreeFamily2(members, root) {
         let spouse = members.find(
             (member) => member._id.toString() === root.spouse[i]
         );
-        if (!spouse) {
-            const error = new Error("Không tìm thấy thành viên trong dòng họ!");
-            error.statusCode = 404;
-            throw error;
+        if (spouse) {
+            const spouseDetail = await MemberDetail.findOne({
+                member_id: spouse._id,
+            });
+            var spouse_dob = "";
+            var spouse_dod = "";
+            var spouse_image = "";
+            if (spouseDetail) {
+                if (spouseDetail.date_of_birth) {
+                    spouse_dob = spouseDetail.date_of_birth;
+                }
+                if (spouseDetail.date_of_death) {
+                    spouse_dod = spouseDetail.date_of_death;
+                }
+                spouse_image = spouseDetail.images;
+            }
+            root.spouse[i] = {
+                id: spouse._id.toString(),
+                fullname: spouse.fullname,
+                gender: spouse.gender,
+                dob: spouse_dob,
+                dod: spouse_dod,
+                image:
+                    spouse_image ||
+                    "https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere-thumbnail.png",
+            };
         }
 
         console.log("Spouse", spouse);
-
-        const spouseDetail = await MemberDetail.findOne({
-            member_id: spouse._id,
-        });
-        var spouse_dob = "";
-        var spouse_dod = "";
-        var spouse_image = "";
-        if (!spouseDetail) {
-            const error = new Error("Không tìm thấy thông tin thành viên");
-            throw error;
-        } else {
-            spouse_dob = spouseDetail.date_of_birth;
-            spouse_dod = spouseDetail.date_of_death;
-            spouse_image = spouseDetail.images;
-        }
-        root.spouse[i] = {
-            id: spouse._id.toString(),
-            fullname: spouse.fullname,
-            gender: spouse.gender,
-            dob: spouse_dob,
-            dod: spouse_dod,
-            image:
-                spouse_image ||
-                "https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere-thumbnail.png",
-        };
     }
     if (root.children.length === 0) {
         return root;
@@ -423,82 +421,72 @@ async function getTreeFamily2(members, root) {
             let childMain = members.find(
                 (member) => member._id.toString() === root.children[i]
             );
-            if (!childMain) {
-                const error = new Error(
-                    "Không tìm thấy thành viên trong dòng họ!"
-                );
-                error.statusCode = 404;
-                throw error;
-            }
-
-            var child_dob = "";
-            var child_dod = "";
-            var child_image = "";
-            const childDetail = await MemberDetail.findOne({
-                member_id: childMain._id,
-            });
-            if (!childDetail) {
-                const error = new Error("Không tìm thấy thông tin thành viên");
-                throw error;
-            } else {
-                child_dob = childDetail.date_of_birth;
-                child_dod = childDetail.date_of_death;
-                child_image = childDetail.images;
-            }
-
-            //children cua thang childMain
-            let childrenField = [];
-            if (root.children) {
-                for (let i = 0; i < childMain.children.length; i++) {
-                    let child = members.find(
-                        (member) =>
-                            member._id.toString() ===
-                            childMain.children[i].toString()
-                    );
-                    if (!child) {
-                        const error = new Error(
-                            "Không tìm thấy thành viên trong dòng họ!"
-                        );
-                        error.statusCode = 404;
-                        throw error;
+            if (childMain) {
+                var child_dob = "";
+                var child_dod = "";
+                var child_image = "";
+                const childDetail = await MemberDetail.findOne({
+                    member_id: childMain._id,
+                });
+                if (childDetail) {
+                    if (childDetail.date_of_birth) {
+                        child_dob = childDetail.date_of_birth;
                     }
-                    childrenField.push(child._id.toString());
-                }
-            }
-
-            let spouseField = [];
-            if (root.spouse) {
-                for (let i = 0; i < childMain.spouse.length; i++) {
-                    let spouse = members.find(
-                        (member) =>
-                            member._id.toString() ===
-                            childMain.spouse[i].toString()
-                    );
-                    if (!spouse) {
-                        const error = new Error(
-                            "Không tìm thấy thành viên trong dòng họ!"
-                        );
-                        error.statusCode = 404;
-                        throw error;
+                    if (childDetail.date_of_death) {
+                        child_dod = childDetail.date_of_death;
                     }
-                    spouseField.push(spouse._id.toString());
+                    child_image = childDetail.images;
                 }
+
+                //children cua thang childMain
+                let childrenField = [];
+                if (root.children) {
+                    for (let i = 0; i < childMain.children.length; i++) {
+                        let child = members.find(
+                            (member) =>
+                                member._id.toString() ===
+                                childMain.children[i].toString()
+                        );
+                        if (!child) {
+                            const error = new Error(
+                                "Không tìm thấy thành viên trong dòng họ!"
+                            );
+                            error.statusCode = 404;
+                            throw error;
+                        }
+                        childrenField.push(child._id.toString());
+                    }
+                }
+
+                let spouseField = [];
+                if (root.spouse) {
+                    for (let i = 0; i < childMain.spouse.length; i++) {
+                        let spouse = members.find(
+                            (member) =>
+                                member._id.toString() ===
+                                childMain.spouse[i].toString()
+                        );
+                        if (spouse) {
+                            spouseField.push(spouse._id.toString());
+                        }
+                    }
+                }
+
+                root.children[i] = {
+                    id: childMain._id.toString(),
+                    fullname: childMain.fullname,
+                    gender: childMain.gender,
+                    dob: child_dob,
+                    dod: child_dod,
+                    image:
+                        child_image ||
+                        "https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere-thumbnail.png",
+                    spouse: spouseField,
+                    children: childrenField,
+                };
+
+                await getTreeFamily2(members, root.children[i]);
             }
-
-            root.children[i] = {
-                id: childMain._id.toString(),
-                fullname: childMain.fullname,
-                gender: childMain.gender,
-                dob: child_dob,
-                dod: child_dod,
-                image:
-                    child_image ||
-                    "https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere-thumbnail.png",
-                spouse: spouseField,
-                children: childrenField,
-            };
-
-            await getTreeFamily2(members, root.children[i]);
         }
     }
 }
