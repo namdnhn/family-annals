@@ -611,6 +611,7 @@ exports.getMember2 = async (req, res, next) => {
         let placeOfBirth = "";
         let placeOfDeath = "";
         let description = "";
+        let images = "";
         const memberInfo = await MemberDetail.findOne({ member_id: member_id });
         if (memberInfo) {
             formattedDateOfBirth = memberInfo.date_of_birth;
@@ -618,6 +619,7 @@ exports.getMember2 = async (req, res, next) => {
             placeOfBirth = memberInfo.place_of_birth;
             placeOfDeath = memberInfo.place_of_death;
             description = memberInfo.background_desc;
+            images = memberInfo.images;
         }   
         const children = [];
         const spouse = [];
@@ -667,6 +669,7 @@ exports.getMember2 = async (req, res, next) => {
             children: children,
             parent: parent,
             description: description,
+            images: images,
         };
 
         res.status(200).json({
