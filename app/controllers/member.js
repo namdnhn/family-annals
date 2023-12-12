@@ -2,6 +2,7 @@ const { validationResult } = require("express-validator");
 
 const Families = require("../models/families");
 const Members = require("../models/members");
+const MemberDetail = require("../models/memberDetail");
 
 //auto add members to family
 async function addMembersToFamily(family_id, ids) {
@@ -580,6 +581,92 @@ exports.getMember = async (req, res, next) => {
             spouse: spouse,
             children: children,
             parent: parent,
+        };
+
+        res.status(200).json({
+            message: "Lấy thông tin thành viên thành công!",
+            memberInfo: responseData,
+            member: member,
+        });
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
+exports.getMember2 = async (req, res, next) => {
+    const member_id = req.params.id;
+    try {
+        const member = await Members.findOne({ _id: member_id });
+        if (!member) {
+            const error = new Error("Không tìm thấy thành viên!");
+            error.statusCode = 404;
+            throw error;
+        }
+
+        let formattedDateOfBirth = "";
+        let formattedDateOfDeath = "";
+        let placeOfBirth = "";
+        let placeOfDeath = "";
+        let description = "";
+        const memberInfo = await MemberDetail.findOne({ member_id: member_id });
+        if (memberInfo) {
+            formattedDateOfBirth = memberInfo.date_of_birth;
+            formattedDateOfDeath = memberInfo.date_of_death;
+            placeOfBirth = memberInfo.place_of_birth;
+            placeOfDeath = memberInfo.place_of_death;
+            description = memberInfo.background_desc;
+        }   
+        const children = [];
+        const spouse = [];
+        const parent = [];
+
+        console.log("Độ dài của children: ", member.children);
+
+        for (let i = 0; i < member.children.length; i++) {
+            const child = await Members.findOne({ _id: member.children[i] });
+            console.log(`child ${i} là ${child}`);
+            if (child)
+                children.push({
+                    id: child._id,
+                    fullname: child.fullname,
+                    gender: child.gender,
+                });
+        }
+
+        for (let i = 0; i < member.spouse.length; i++) {
+            const sp = await Members.findOne({ _id: member.spouse[i] });
+            spouse.push({
+                id: sp._id,
+                fullname: sp.fullname,
+                gender: sp.gender,
+            });
+        }
+
+        for (let i = 0; i < member.parent.length; i++) {
+            const par = await Members.findOne({ _id: member.parent[i] });
+            parent.push({
+                id: par._id,
+                fullname: par.fullname,
+                gender: par.gender,
+            });
+        }
+
+        const responseData = {
+            _id: member._id,
+            family_id: member.family_id,
+            fullname: member.fullname,
+            gender: member.gender,
+            date_of_birth: formattedDateOfBirth,
+            place_of_birth: placeOfBirth,
+            date_of_death: formattedDateOfDeath,
+            place_of_death: placeOfDeath,
+            spouse: spouse,
+            children: children,
+            parent: parent,
+            description: description,
         };
 
         res.status(200).json({

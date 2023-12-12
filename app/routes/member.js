@@ -36,6 +36,8 @@ router.delete("/delete/:id", isAuth, memberController.deleteMember);
 //GET /member/get/id
 router.get("/get/:id", memberController.getMember);
 
+router.get("/get2/:id", memberController.getMember2);
+
 //GET /member/getall
 router.get("/getall", memberController.getAllMembers);
 
