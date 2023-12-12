@@ -332,7 +332,7 @@ exports.getFamilyTree = async (req, res, next) => {
                         member._id.toString() === root.children[i].toString()
                 );
                 if (!child) {
-                    break;
+                    continue;
                 }
                 childrenField.push(child._id.toString());
             }
@@ -345,7 +345,7 @@ exports.getFamilyTree = async (req, res, next) => {
                         member._id.toString() === root.spouse[i].toString()
                 );
                 if (!spouse) {
-                    break;
+                    continue;
                 }
                 spouseField.push(spouse._id.toString());
             }
