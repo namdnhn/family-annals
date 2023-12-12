@@ -119,24 +119,59 @@ exports.deleteFamily = async (req, res, next) => {
     }
 };
 
+// exports.getAllFamily = async (req, res, next) => {
+//     try {
+//         const page = parseInt(req.query.page) || 1; //Default to page 1
+//         const itemsPerPage = parseInt(req.query.itemsPerPage) || 5; //Default to 10 items per page
+
+//         const families = await Families.find()
+//             .skip((page - 1) * itemsPerPage)
+//             .limit(itemsPerPage);
+
+//         const totalItems = await Families.countDocuments();
+
+//         res.status(200).json({
+//             message: "Lấy dữ liệu tất cả dòng họ thành công!",
+//             families: families,
+//             totalItems: totalItems,
+//             currentPage: page,
+//             itemsPerPage: itemsPerPage,
+//             totalPages: Math.ceil(totalItems / itemsPerPage),
+//         });
+//     } catch (err) {
+//         if (!err.statusCode) {
+//             err.statusCode = 500;
+//         }
+//         next(err);
+//     }
+// };
+
 exports.getAllFamily = async (req, res, next) => {
     try {
-        const page = parseInt(req.query.page) || 1; //Default to page 1
-        const itemsPerPage = parseInt(req.query.itemsPerPage) || 10; //Default to 10 items per page
+      const families = await Families.find();
+      res.status(200).json({
+        message: "Lấy dữ liệu tất cả dòng họ thành công!",
+        families: families,
+      });
+    } catch (err) {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    }
+  };
 
-        const families = await Families.find()
-            .skip((page - 1) * itemsPerPage)
-            .limit(itemsPerPage);
-
-        const totalItems = await Families.countDocuments();
-
+//search family by name
+exports.searchFamily = async (req, res, next) => {
+    const text = removeAccents(req.query.text).toLowerCase();
+    try {
+        const families = await Families.find().lean();
+        const matchedFamilies = families.filter((family) =>
+            removeAccents(family.name).toLowerCase().includes(text)
+        );
         res.status(200).json({
-            message: "Lấy dữ liệu tất cả dòng họ thành công!",
-            families: families,
-            totalItems: totalItems,
-            currentPage: page,
-            itemsPerPage: itemsPerPage,
-            totalPages: Math.ceil(totalItems / itemsPerPage),
+            message: "Tìm kiếm dòng họ thành công!",
+            families: matchedFamilies,
         });
     } catch (err) {
         if (!err.statusCode) {
@@ -145,6 +180,34 @@ exports.getAllFamily = async (req, res, next) => {
         next(err);
     }
 };
+
+// exports.getAllFamilySortByQuantity = async (req, res, next) => {
+//     try {
+//         const page = parseInt(req.query.page) || 1; //Default to page 1
+//         const itemsPerPage = parseInt(req.query.itemsPerPage) || 5; //Default to 10 items per page
+
+//         const families = await Families.find()
+//             .sort({ families.member: 1 })
+//             .skip((page - 1) * itemsPerPage)
+//             .limit(itemsPerPage);
+
+//         const totalItems = await Families.countDocuments();
+
+//         res.status(200).json({
+//             message: "Lấy dữ liệu tất cả dòng họ thành công!",
+//             families: families,
+//             totalItems: totalItems,
+//             currentPage: page,
+//             itemsPerPage: itemsPerPage,
+//             totalPages: Math.ceil(totalItems / itemsPerPage),
+//         });
+//     } catch (err) {
+//         if (!err.statusCode) {
+//             err.statusCode = 500;
+//         }
+//         next(err);
+//     }
+// }
 
 exports.getFamily = async (req, res, next) => {
     const family_id = req.params.id;
@@ -155,6 +218,7 @@ exports.getFamily = async (req, res, next) => {
             error.statusCode = 404;
             throw error;
         }
+
         const members = await Members.find({ family_id: family_id });
         if (!members) {
             const error = new Error("Không tìm thấy thành viên trong dòng họ!");
@@ -185,11 +249,7 @@ exports.getFamily = async (req, res, next) => {
                         member._id.toString() === root.children[i].toString()
                 );
                 if (!child) {
-                    const error = new Error(
-                        "Không tìm thấy thành viên trong dòng họ!"
-                    );
-                    error.statusCode = 404;
-                    throw error;
+                    continue;
                 }
                 childrenField.push(child._id.toString());
             }
@@ -203,11 +263,7 @@ exports.getFamily = async (req, res, next) => {
                         member._id.toString() === root.spouse[i].toString()
                 );
                 if (!spouse) {
-                    const error = new Error(
-                        "Không tìm thấy thành viên trong dòng họ!"
-                    );
-                    error.statusCode = 404;
-                    throw error;
+                    continue;
                 }
                 spouseField.push(spouse._id.toString());
             }
@@ -276,11 +332,7 @@ exports.getFamilyTree = async (req, res, next) => {
                         member._id.toString() === root.children[i].toString()
                 );
                 if (!child) {
-                    const error = new Error(
-                        "Không tìm thấy thành viên trong dòng họ!"
-                    );
-                    error.statusCode = 404;
-                    throw error;
+                    break;
                 }
                 childrenField.push(child._id.toString());
             }
@@ -293,11 +345,7 @@ exports.getFamilyTree = async (req, res, next) => {
                         member._id.toString() === root.spouse[i].toString()
                 );
                 if (!spouse) {
-                    const error = new Error(
-                        "Không tìm thấy thành viên trong dòng họ!"
-                    );
-                    error.statusCode = 404;
-                    throw error;
+                    break;
                 }
                 spouseField.push(spouse._id.toString());
             }
@@ -543,22 +591,4 @@ async function getTreeFamily(members, root) {
     }
 }
 
-//search family by name
-exports.searchFamily = async (req, res, next) => {
-    const text = removeAccents(req.query.text).toLowerCase();
-    try {
-        const families = await Families.find().lean();
-        const matchedFamilies = families.filter((family) =>
-            removeAccents(family.name).toLowerCase().includes(text)
-        );
-        res.status(200).json({
-            message: "Tìm kiếm dòng họ thành công!",
-            families: matchedFamilies,
-        });
-    } catch (err) {
-        if (!err.statusCode) {
-            err.statusCode = 500;
-        }
-        next(err);
-    }
-};
+

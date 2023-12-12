@@ -92,13 +92,13 @@ export default {
         let apiUrl =
             (await context.rootGetters.getApiUrl) + "family" + "/get/" + id;
 
-        console.log(apiUrl);
         const response = await fetch(apiUrl, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
             },
         });
+
 
         const responseData = await response.json();
 
