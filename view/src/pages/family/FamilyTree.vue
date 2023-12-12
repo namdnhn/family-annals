@@ -9,7 +9,7 @@
                 {{ familyTitle }}
             </h1>
             <img
-                :src="familyLogo || '../../assets/images/logo.png'"
+                :src="familyLogo || 'http://localhost:5173/src/assets/images/logo.png'"
                 alt="family logo"
                 class="h-32 w-32"
             />
@@ -404,6 +404,7 @@ export default {
                     "family/getFamily",
                     this.$route.params.id
                 );
+                console.log(res);
                 this.familyLogo = res.logo;
                 this.familyTitle = res.name;
                 this.familyQuantity = res.members.length;
