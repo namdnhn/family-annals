@@ -544,12 +544,16 @@ exports.getMember = async (req, res, next) => {
         const spouse = [];
         const parent = [];
 
+        console.log("Độ dài của children: ", member.children);
+
         for (let i = 0; i < member.children.length; i++) {
             const child = await Members.findOne({ _id: member.children[i] });
-            children.push({
-                fullname: child.fullname,
-                gender: child.gender,
-            });
+            console.log(`child ${i} là ${child}`);
+            if (child)
+                children.push({
+                    fullname: child.fullname,
+                    gender: child.gender,
+                });
         }
 
         for (let i = 0; i < member.spouse.length; i++) {

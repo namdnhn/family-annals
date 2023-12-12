@@ -197,6 +197,9 @@ exports.getMemberDetail2 = async (req, res, next) => {
                     place_of_birth: "",
                     date_of_death: "",
                     place_of_death: "",
+                    parent: member.parent,
+                    spouse: member.spouse,
+                    children: member.children,
                     images:
                         member.images ||
                         "https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere-thumbnail.png",
@@ -204,7 +207,17 @@ exports.getMemberDetail2 = async (req, res, next) => {
                 },
             });
         } else {
-            //convert from dade to string dd//mm/yyyy
+            const member = await Members.findOne({
+                _id: member_id,
+            });
+
+            if (!member) {
+                const error = new Error(
+                    "Không tìm thấy thông tin chi tiết của thành viên!"
+                );
+                error.statusCode = 404;
+                throw error;
+            }
 
             res.status(200).json({
                 message: "Lấy thông tin chi tiết của thành viên thành công!",
@@ -217,6 +230,9 @@ exports.getMemberDetail2 = async (req, res, next) => {
                     place_of_birth: memberDetail.place_of_birth,
                     date_of_death: memberDetail.date_of_death,
                     place_of_death: memberDetail.place_of_death,
+                    parent: member.parent,
+                    spouse: member.spouse,
+                    children: member.children,
                     images: memberDetail.images,
                     background_desc: memberDetail.background_desc,
                 },
