@@ -172,5 +172,7 @@ export default {
             const error = new Error(errorMessage);
             throw error;
         }
+
+        return responseData.family;
     },
 };

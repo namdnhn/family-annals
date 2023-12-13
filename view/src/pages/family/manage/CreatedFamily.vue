@@ -21,6 +21,7 @@
                 :name="family.name"
             ></family-card>
         </div>
+        <base-spinner v-if="isLoading"></base-spinner>
     </main>
 </template>
 
@@ -34,6 +35,7 @@ export default {
     data() {
         return {
             families: [],
+            isLoading: false    
         };
     },
     methods: {

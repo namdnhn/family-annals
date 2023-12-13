@@ -125,6 +125,9 @@
             </div>
         </form>
         <base-spinner v-if="isLoading"></base-spinner>
+        <base-dialog :show="!!success" :title="success" @close="confirmSuccess">
+            <p>Hãy thêm các thành viên trong dòng họ của bạn</p>
+        </base-dialog>
     </main>
 </template>
 
@@ -153,6 +156,8 @@ export default {
             background: "",
             logo: "",
             isLoading: false,
+            success: null,
+            createdFamilyId: null
         };
     },
     methods: {
@@ -164,7 +169,6 @@ export default {
         removeAdmin(index) {
             this.admin.splice(index, 1);
         },
-
         previewImage(event) {
             const file = event.target.files?.[0];
             if (file) {
@@ -239,8 +243,11 @@ export default {
                     logo: this.uploadedImage,
                 };
                 try {
-                    await this.$store.dispatch("family/createFamily", formData);
+                    const res = await this.$store.dispatch("family/createFamily", formData);
                     console.log("create new family successfully");
+                    console.log(res);
+                    this.createdFamilyId = res._id;
+                    this.success = 'Tạo dòng họ thành công!';
                     this.resetForm();
                 } catch (error) {
                     console.log(error);
@@ -257,6 +264,10 @@ export default {
             this.background = "";
             this.logo = "";
         },
+        confirmSuccess() {
+            this.success = null;
+            this.$router.push(`/family/${this.createdFamilyId}/tree`)
+        }
     },
     computed: {
         isValidate() {

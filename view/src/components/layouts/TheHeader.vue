@@ -65,11 +65,6 @@
                 v-if="isShowUserInfo"
             >
                 <base-list
-                    icon="fa-solid fa-circle-info"
-                    title="Thông tin tài khoản"
-                    @click="isShowUserInfo = false"
-                />
-                <base-list
                     icon="fa-solid fa-arrow-right-from-bracket"
                     title="Đăng xuất"
                     @click="logout"
@@ -90,8 +85,9 @@ export default {
         };
     },
     methods: {
-        logout() {
-            this.$store.dispatch("logout");
+        async logout() {
+            await this.$store.dispatch("logout");
+            this.$router.push("/auth");
         },
         async getUserId() {
             this.userId = await this.$store.getters.userId;

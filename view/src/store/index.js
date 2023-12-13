@@ -12,7 +12,7 @@ const store = createStore({
     },
     state() {
         return {
-            apiUrl: 'https://family-annals-api.vercel.app/'
+            apiUrl: 'http://localhost:8080/'
         }
     },
     getters: {

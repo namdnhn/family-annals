@@ -1,5 +1,5 @@
 <template>
-    <main class="pt-20 h-screen flex items-center justify-center">
+    <main class="pt-20 h-screen flex items-center justify-center bg-green-200">
         <form
             @submit.prevent="login"
             class="px-20 py-5 bg-white flex flex-col items-center rounded-lg gap-8 border-2 shadow"
@@ -166,7 +166,7 @@
                 Vui lòng thử lại
             </p>
         </base-dialog>
-        <base-dialog :show="!!success" :title="success" @close="closeDialog">
+        <base-dialog :show="!!success" :title="success" @close="confirmSuccess">
             <p>Bạn có thể sử dụng tài khoản này để đăng nhập vào Family Annals</p>
         </base-dialog>
     </main>
@@ -290,6 +290,10 @@ export default {
             this.error.message = null;
             this.success = null;
         },
+        confirmSuccess() {
+            this.success = null;
+            this.swithForm("login");
+        }
     },
     computed: {
         registerValidate() {
