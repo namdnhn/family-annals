@@ -11,9 +11,8 @@ import {
 import { axiosInstance } from "../constants/Axios";
 
 export default function App({ navigation, route }) {
-  const {s_id} = route.params;
-  console.log(s_id);
-  const [data, setData] = useState("");
+  const {s_id, name} = route.params;
+  const [data, setData] = useState([]);
   const [dataFetched, setDataFetched] = useState(false);
 
   useEffect(() => {
@@ -37,14 +36,14 @@ export default function App({ navigation, route }) {
       <SafeAreaView>
         <ScrollView contentInsetAdjustmentBehavior="automatic">
           <FamilyTree
-            title="Rethinam and Family"
+            title={name}
             pathColor="black"
             siblingGap={10}
             data={data}
             navigation={navigation}
             nodeStyle={{
               width: 100,
-              height: 145,
+              height: 160,
               justifyContent: "center",
               alignItems: "center",
               borderWidth: 2,
@@ -58,12 +57,12 @@ export default function App({ navigation, route }) {
               alignItems: "center",
             }}
             nodeTitleStyle={{
-              fontSize: 14,
+              fontSize: 13,
               fontWeight: "bold",
               textAlign: "center"
             }}
             nodeInfoStyle={{
-              fontSize: 13,
+              fontSize: 10,
               textAlign: "center"
             }}
             imageStyle={{
