@@ -9,7 +9,10 @@
                 {{ familyTitle }}
             </h1>
             <img
-                :src="familyLogo || 'http://localhost:5173/src/assets/images/logo.png'"
+                :src="
+                    familyLogo ||
+                    'http://localhost:5173/src/assets/images/logo.png'
+                "
                 alt="family logo"
                 class="h-32 w-32"
             />
@@ -72,7 +75,7 @@
             </button> -->
             <section
                 class="px-4 py-2 border rounded-xl border-green-500"
-                v-if="tree.length === 0"
+                v-if="tree.length === 0 && isAdmin"
             >
                 <form
                     @submit.prevent="handleSubmit"
@@ -525,6 +528,10 @@ export default {
                 }
             }
             return true;
+        },
+        isAdmin() {
+            const userId = this.$store.getters["getUserId"];
+            return this.family_admin.includes(userId);
         },
     },
     mounted() {

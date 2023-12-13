@@ -276,7 +276,7 @@ exports.getFamily = async (req, res, next) => {
                 gender: root.gender,
                 image:
                     root.images ||
-                    "https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere-thumbnail.png",
+                    "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg",
             },
             spouse: spouseField,
             children: childrenField,
@@ -358,7 +358,7 @@ exports.getFamilyTree = async (req, res, next) => {
             dod: root_dod,
             image:
                 root_image ||
-                "https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere-thumbnail.png",
+                "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg",
             spouse: spouseField,
             children: childrenField,
         };
@@ -412,7 +412,7 @@ async function getTreeFamily2(members, root) {
             dod: spouse_dod,
             image:
                 spouse_image ||
-                "https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere-thumbnail.png",
+                "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg",
         };
     }
     if (root.children.length === 0) {
@@ -493,7 +493,7 @@ async function getTreeFamily2(members, root) {
                 dod: child_dod,
                 image:
                     child_image ||
-                    "https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere-thumbnail.png",
+                    "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg",
                 spouse: spouseField,
                 children: childrenField,
             };
@@ -520,7 +520,7 @@ async function getTreeFamily(members, root) {
             gender: spouse.gender,
             image:
                 spouse.images ||
-                "https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere-thumbnail.png",
+                "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg",
         };
     }
     if (root.children.length === 0) {
@@ -580,7 +580,7 @@ async function getTreeFamily(members, root) {
                     gender: childMain.gender,
                     image:
                         childMain.images ||
-                        "https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere-thumbnail.png",
+                        "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg",
                 },
                 spouse: spouseField,
                 children: childrenField,
