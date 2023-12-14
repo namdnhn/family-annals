@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = 'https://family-annals-api.vercel.app';
+const baseURL = 'http://192.168.30.103:8080';
 const axiosInstance = axios.create({
   baseURL: baseURL,
   timeout: 10000,

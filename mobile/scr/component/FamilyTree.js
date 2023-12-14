@@ -101,7 +101,7 @@ export default class FamilyTree extends Component {
                 }}
               >
                 <TouchableOpacity
-                  onPress={() => this.props.navigation.navigate("DetailMember", {s_id: info.id })}
+                  onPress={() => this.props.navigation.navigate("DetailMember", {s_id: info.id, updateTree: this.props.updateTree })}
                 >
                   <View
                     style={{

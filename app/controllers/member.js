@@ -364,7 +364,6 @@ exports.addChildren = async (req, res, next) => {
             family_id
         );
         if (newChildrenId) {
-            console.log(newChildrenId);
             member.children.push(newChildrenId);
         }
         let result = await member.save();
