@@ -15,6 +15,6 @@ In this project, the following technologies were utilized:
 * Back-end:
   - Node.js
   - Express.js
-  - MySQL
+  - MongoDB
   - Firebase
  
