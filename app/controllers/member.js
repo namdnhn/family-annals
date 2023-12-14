@@ -88,6 +88,43 @@ async function createMemAddSpouse(spouse_id, spouse_data, family_id) {
     return ids;
 }
 
+async function addMemberToFamily(family_id, id) {
+    const family = await Families.findById(family_id);
+    if (!family) {
+        throw new Error("Không thể tìm thấy dòng họ!");
+    }
+
+    const member = await Members.findById(id);
+    if (!member) {
+        throw new Error("Thành viên không tồn tại");
+    }
+    console.log("member: ", member._id);
+    family.members.push(id);
+
+    await family.save();
+}
+
+async function addChildren(parent_id, children_data, family_id) {
+    let id = "";
+    const member = new Members({
+        family_id: family_id,
+        fullname: children_data.fullname,
+        gender: children_data.gender,
+        parent: [parent_id],
+    });
+    try {
+        const result = await member.save();
+        id = result._id;
+        await addMemberToFamily(family_id, id);
+        return id;
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        throw err;
+    }
+}
+
 //Ham xử lí tạo member mới và auto thêm parent
 //Dùng cho khi tạo một member mới và member đó tạo một children mới (không dùng children_id)
 async function createMemAddParent(parent_id, children_data, family_id) {
@@ -307,6 +344,41 @@ async function updateMemField(current_mem, field, field_data) {
     }
     return ids;
 }
+
+exports.addChildren = async (req, res, next) => {
+    const member_id = req.body.id;
+    const children_data = req.body.children_data;
+    const family_id = req.body.family_id;
+
+    const member = await Members.findOne({ _id: member_id });
+
+    if (!member) {
+        res.status(404).json({ message: "Không tìm thấy thành viên." });
+        return;
+    }
+
+    try {
+        const newChildrenId = await addChildren(
+            member_id,
+            children_data,
+            family_id
+        );
+        if (newChildrenId) {
+            console.log(newChildrenId);
+            member.children.push(newChildrenId);
+        }
+        let result = await member.save();
+        res.status(201).json({
+            message: "Thành viên đã được tạo thành công!",
+            member: result,
+        });
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
 
 //Controller xử lí khi tạo mới một thành viên trong Family (yêu cầu nhập thông tin về family_id, fullname, parent, spouse, children)
 exports.createMember = async (req, res, next) => {
@@ -620,7 +692,7 @@ exports.getMember2 = async (req, res, next) => {
             placeOfDeath = memberInfo.place_of_death;
             description = memberInfo.background_desc;
             images = memberInfo.images;
-        }   
+        }
         const children = [];
         const spouse = [];
         const parent = [];

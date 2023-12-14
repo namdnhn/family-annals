@@ -27,6 +27,9 @@ router.post(
     memberController.createMember
 );
 
+// POST /member/addchildren
+router.post("/addchildren", memberController.addChildren);
+
 //PUT /member/update/id
 router.put("/update/:id", isAuth, memberController.updateMember);
 
