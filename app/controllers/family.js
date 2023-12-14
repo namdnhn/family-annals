@@ -299,6 +299,13 @@ exports.getFamily = async (req, res, next) => {
 exports.getFamilyTree = async (req, res, next) => {
     const family_id = req.params.id;
     try {
+        const family = await Families.findOne({ _id: family_id });
+        if (!family) {
+            const error = new Error("Không tìm thấy dòng họ!");
+            error.statusCode = 404;
+            throw error;
+        }
+
         const members = await Members.find({ family_id: family_id });
         if (!members) {
             const error = new Error("Không tìm thấy thành viên trong dòng họ!");
@@ -308,7 +315,9 @@ exports.getFamilyTree = async (req, res, next) => {
 
         //Tạo cây dòng họ
         let root = members.find(
-            (member) => member.parent.length === 0 || !member.parent
+            (member) =>
+                (member.parent.length === 0 || !member.parent) &&
+                member.gender !== "Nữ"
         );
 
         var root_dob = "";
@@ -363,6 +372,7 @@ exports.getFamilyTree = async (req, res, next) => {
             spouse: spouseField,
             children: childrenField,
         };
+        console.log("root", root);
         await getTreeFamily2(members, root);
 
         res.status(200).json({
@@ -414,12 +424,15 @@ async function getTreeFamily2(members, root) {
     if (root.children.length === 0) {
         return root;
     } else {
+        console.log("root", root);
         //add children
         for (let i = 0; i < root.children.length; i++) {
+            console.log("root.children[i]", root.children[i]);
             let childMain = members.find(
                 (member) => member._id.toString() === root.children[i]
             );
             if (childMain) {
+                console.log("childMain", childMain);
                 var child_dob = "";
                 var child_dod = "";
                 var child_image = "";
@@ -439,7 +452,9 @@ async function getTreeFamily2(members, root) {
                 //children cua thang childMain
                 let childrenField = [];
                 if (root.children) {
+                    console.log("childMain.children", childMain.children);
                     for (let i = 0; i < childMain.children.length; i++) {
+                        console.log("childMain.children[i]", childMain.children[i]);
                         let child = members.find(
                             (member) =>
                                 member._id.toString() ===

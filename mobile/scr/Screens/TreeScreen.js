@@ -33,13 +33,13 @@ export default function App({ navigation, route }) {
     });
 
     const handleDataFetch = () => {
-      setDataFetched(false);
-    }
+        setDataFetched(false);
+    };
     console.disableYellowBox = true;
     return (
         <Fragment>
             <StatusBar barStyle="dark-content" />
-            <SafeAreaView>
+            <SafeAreaView style={{marginBottom: 50}}>
                 <ScrollView contentInsetAdjustmentBehavior="automatic">
                     <FamilyTree
                         title={name}
@@ -85,7 +85,7 @@ export default function App({ navigation, route }) {
                         }}
                         nodeInfoColor="grey"
                         nodeTitleColor="red"
-                        familyGap={20}
+                        familyGap={10}
                         strokeWidth={2}
                         titleColor="green"
                     />

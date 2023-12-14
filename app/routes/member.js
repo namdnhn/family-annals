@@ -30,6 +30,12 @@ router.post(
 // POST /member/addchildren
 router.post("/addchildren", memberController.addChildren);
 
+// POST /member/addspouse
+router.post("/addspouse", memberController.addSpouse);
+
+// POST /member/addparent
+router.post("/addparent", memberController.addParent);
+
 //PUT /member/update/id
 router.put("/update/:id", isAuth, memberController.updateMember);
 

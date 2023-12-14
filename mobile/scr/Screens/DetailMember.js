@@ -515,15 +515,52 @@ export default function DetailMember({ navigation, route }) {
         };
 
         const addFather = async () => {
-            // Call API to add father
-            // ...
-            toggleModal();
+            const fatherData = {
+                id: s_id,
+                parent_data: {
+                    fullname: fatherName,
+                    gender: "Nam",
+                },
+                family_id: data.family_id,
+            };
+            try {
+                const response = await axiosInstance.post(
+                    "/member/addparent",
+                    fatherData
+                );
+                if (response.status === 201) {
+                    setDataFetched(false);
+                    setFatherName("");
+                    updateTree();
+                }
+            } catch (error) {
+                console.error("Lỗi", error);
+            }
         };
 
         const addSpouse = async () => {
-            // Call API to add spouse
-            // ...
-            toggleModal();
+            const spouseData = {
+                id: s_id,
+                spouse_data: {
+                    fullname: spouseName,
+                    gender: "Nữ",
+                },
+                family_id: data.family_id,
+            };
+
+            try {
+                const response = await axiosInstance.post(
+                    "/member/addspouse",
+                    spouseData
+                );
+                if (response.status === 201) {
+                    setDataFetched(false);
+                    setSpouseName("");
+                    setGender("Nam");
+                }
+            } catch (error) {
+                console.error("Lỗi", error);
+            }
         };
 
         return (
@@ -783,6 +820,17 @@ export default function DetailMember({ navigation, route }) {
                                         setSpouseModalVisible(true);
                                     }}
                                 ></Button>
+                            </View>
+                        )}
+                        {data.gender === "Nữ" && (
+                            <View
+                                style={{
+                                    flexDirection: "row",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                }}
+                            >
+                                <Text style={styles.textheader}> Chồng </Text>
                             </View>
                         )}
                         <ScrollView>
