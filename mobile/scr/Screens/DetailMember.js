@@ -5,27 +5,24 @@ import {
     Dimensions,
     Image,
     ScrollView,
-    StyleSheet,
     Text,
     TextInput,
     View,
-    StatusBar,
-    ImageBackground,
-    Touchable,
     TouchableOpacity,
-    TouchableHighlight,
-    FlatList,
-    VirtualizedList,
     Modal,
-    Pressable,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { Platform, Button, SafeAreaView, Alert } from "react-native";
+import { Button, SafeAreaView, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ScreenHeight } from "react-native-elements/dist/helpers";
 import { axiosInstance } from "../constants/Axios";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CheckBox from "expo-checkbox";
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs([
+  'Non-serializable values were found in the navigation state',
+]);
 
 const Tab = createMaterialTopTabNavigator();
 const { width: WIDTH } = Dimensions.get("window");
@@ -485,10 +482,6 @@ export default function DetailMember({ navigation, route }) {
             }
         }, []);
 
-        const toggleModal = () => {
-            setChildModalVisible(!isChildModalVisible);
-        };
-
         const addChild = async () => {
             const childData = {
                 id: s_id,
@@ -557,6 +550,21 @@ export default function DetailMember({ navigation, route }) {
                     setDataFetched(false);
                     setSpouseName("");
                     setGender("Nam");
+                }
+            } catch (error) {
+                console.error("Lỗi", error);
+            }
+        };
+
+        const deletePerson = async (id) => {
+            try {
+                const response = await axiosInstance.delete(
+                    `/member/deletemember/${id}`
+                );
+                if (response.status === 200) {
+                    console.log("Xóa thành công");
+                    setDataFetched(false);
+                    updateTree();
                 }
             } catch (error) {
                 console.error("Lỗi", error);
@@ -838,26 +846,60 @@ export default function DetailMember({ navigation, route }) {
                                 spouse.map((val) => {
                                     return (
                                         <View
+                                            style={{
+                                                flexDirection: "row",
+                                                justifyContent: "space-between",
+                                            }}
                                             key={val.id}
-                                            style={styles.songsWrapper}
                                         >
-                                            <TouchableOpacity
-                                                style={styles.songs}
-                                                onPress={() =>
-                                                    navigation.push(
-                                                        "DetailMember",
-                                                        { s_id: val.id }
-                                                    )
-                                                }
-                                            >
-                                                <View>
-                                                    <Text
-                                                        style={styles.songTitle}
-                                                    >
-                                                        {val.fullname}
-                                                    </Text>
-                                                </View>
-                                            </TouchableOpacity>
+                                            <View style={styles.textWrapper}>
+                                                <TouchableOpacity
+                                                    style={styles.people}
+                                                    onPress={() =>
+                                                        navigation.push(
+                                                            "DetailMember",
+                                                            { s_id: val.id }
+                                                        )
+                                                    }
+                                                >
+                                                    <View>
+                                                        <Text
+                                                            style={
+                                                                styles.textTitle
+                                                            }
+                                                        >
+                                                            {val.fullname}
+                                                        </Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            </View>
+                                            <View style={styles.textWrapper2}>
+                                                <Button
+                                                    title="Xóa"
+                                                    color={"red"}
+                                                    onPress={() => {
+                                                        Alert.alert(
+                                                            "Xác nhận",
+                                                            "Bạn có chắc chắn muốn xóa không?",
+                                                            [
+                                                                {
+                                                                    text: "Hủy",
+                                                                    style: "cancel",
+                                                                },
+                                                                {
+                                                                    text: "Xóa",
+                                                                    onPress:
+                                                                        () => {
+                                                                            deletePerson(
+                                                                                val.id
+                                                                            );
+                                                                        },
+                                                                },
+                                                            ]
+                                                        );
+                                                    }}
+                                                ></Button>
+                                            </View>
                                         </View>
                                     );
                                 })}
@@ -887,24 +929,60 @@ export default function DetailMember({ navigation, route }) {
 
                         <View>
                             {parent.id ? (
-                                <View style={styles.songsWrapper}>
-                                    <TouchableOpacity
-                                        style={styles.songs}
-                                        onPress={() =>
-                                            navigation.push("DetailMember", {
-                                                s_id: parent.id,
-                                            })
-                                        }
-                                    >
-                                        <View>
-                                            <Text style={styles.songTitle}>
-                                                {parent.name}
-                                            </Text>
-                                        </View>
-                                    </TouchableOpacity>
+                                <View
+                                    style={{
+                                        flexDirection: "row",
+                                        justifyContent: "space-between",
+                                    }}
+                                >
+                                    <View style={styles.textWrapper}>
+                                        <TouchableOpacity
+                                            style={styles.people}
+                                            onPress={() =>
+                                                navigation.push(
+                                                    "DetailMember",
+                                                    {
+                                                        s_id: parent.id,
+                                                    }
+                                                )
+                                            }
+                                        >
+                                            <View>
+                                                <Text style={styles.textTitle}>
+                                                    {parent.name}
+                                                </Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={styles.textWrapper2}>
+                                        <Button
+                                            title="Xóa"
+                                            color={"red"}
+                                            onPress={() => {
+                                                Alert.alert(
+                                                    "Xác nhận",
+                                                    "Bạn có chắc chắn muốn xóa không?",
+                                                    [
+                                                        {
+                                                            text: "Hủy",
+                                                            style: "cancel",
+                                                        },
+                                                        {
+                                                            text: "Xóa",
+                                                            onPress: () => {
+                                                                deletePerson(
+                                                                    parent.id
+                                                                );
+                                                            },
+                                                        },
+                                                    ]
+                                                );
+                                            }}
+                                        ></Button>
+                                    </View>
                                 </View>
                             ) : (
-                                <Text style={styles.songTitle}>
+                                <Text style={styles.textTitle}>
                                     No information
                                 </Text>
                             )}
@@ -934,26 +1012,60 @@ export default function DetailMember({ navigation, route }) {
                                 children.map((val) => {
                                     return (
                                         <View
+                                            style={{
+                                                flexDirection: "row",
+                                                justifyContent: "space-between",
+                                            }}
                                             key={val.id}
-                                            style={styles.songsWrapper}
                                         >
-                                            <TouchableOpacity
-                                                style={styles.songs}
-                                                onPress={() =>
-                                                    navigation.push(
-                                                        "DetailMember",
-                                                        { s_id: val.id }
-                                                    )
-                                                }
-                                            >
-                                                <View>
-                                                    <Text
-                                                        style={styles.songTitle}
-                                                    >
-                                                        {val.fullname}
-                                                    </Text>
-                                                </View>
-                                            </TouchableOpacity>
+                                            <View style={styles.textWrapper}>
+                                                <TouchableOpacity
+                                                    style={styles.people}
+                                                    onPress={() =>
+                                                        navigation.push(
+                                                            "DetailMember",
+                                                            { s_id: val.id }
+                                                        )
+                                                    }
+                                                >
+                                                    <View>
+                                                        <Text
+                                                            style={
+                                                                styles.textTitle
+                                                            }
+                                                        >
+                                                            {val.fullname}
+                                                        </Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            </View>
+                                            <View style={styles.textWrapper2}>
+                                                <Button
+                                                    title="Xóa"
+                                                    color={"red"}
+                                                    onPress={() => {
+                                                        Alert.alert(
+                                                            "Xác nhận",
+                                                            "Bạn có chắc chắn muốn xóa không?",
+                                                            [
+                                                                {
+                                                                    text: "Hủy",
+                                                                    style: "cancel",
+                                                                },
+                                                                {
+                                                                    text: "Xóa",
+                                                                    onPress:
+                                                                        () => {
+                                                                            deletePerson(
+                                                                                val.id
+                                                                            );
+                                                                        },
+                                                                },
+                                                            ]
+                                                        );
+                                                    }}
+                                                ></Button>
+                                            </View>
                                         </View>
                                     );
                                 })}
@@ -1029,28 +1141,28 @@ const styles = {
     button: {
         backgroundColor: "green",
     },
-    songs: {
+    people: {
         height: (50 / standardHeight) * HEIGHT,
-        flexDirection: "row",
         width: WIDTH - 40,
     },
-    songsWrapper: {
+    textWrapper: {
+        width: (WIDTH / 3) * 2,
         marginTop: 5,
         backgroundColor: "white",
         flexDirection: "row",
+        justifyContent: "space-between",
         borderColor: "black",
         borderWidth: 1,
         borderRadius: 15,
     },
-    songTitle: {
+    textWrapper2: {
+        justifyContent: "center",
+    },
+    textTitle: {
         marginTop: 12,
         fontSize: 18,
         color: "black",
         marginLeft: 10,
-    },
-    songType: {
-        marginTop: 0,
-        color: "#616161",
     },
     centeredView: {
         flex: 1,

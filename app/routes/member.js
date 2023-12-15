@@ -42,6 +42,9 @@ router.put("/update/:id", isAuth, memberController.updateMember);
 //DELETE /member/delete/id
 router.delete("/delete/:id", isAuth, memberController.deleteMember);
 
+//DELETE /member/deletemember/id
+router.delete("/deletemember/:id", memberController.deleteMember);
+
 //GET /member/get/id
 router.get("/get/:id", memberController.getMember);
 
