@@ -104,7 +104,7 @@ export default {
                     width: 100%;
                     height: 16px;
                     left: 82px;
-                    border-top: 1px solid #ddd;
+                    border-top: 3px solid #ddd;
                 }
                 &:after {
                     content: "";
@@ -112,13 +112,13 @@ export default {
                     top: 0;
                     left: 82px;
                     height: 16px;
-                    width: 1px;
+                    width: 3px;
                     background-color: #ddd;
                 }
                 &:first-child {
                     &:before {
                         width: calc(100%);
-                        border-left: 1px solid #ddd;
+                        border-left: 3px solid #ddd;
                     }
                     &:after {
                         display: none;
@@ -127,7 +127,7 @@ export default {
                 &:last-child {
                     &:before {
                         width: 0;
-                        border-right: 1px solid #ddd;
+                        border-right: 3px solid #ddd;
                         left: 82px;
                         right: auto;
                     }
@@ -158,7 +158,7 @@ export default {
                         left: calc(
                             (100% - var(--wives-count) * 132px) / 2 + 82px
                         );
-                        border-top: 1px solid #ddd;
+                        border-top: 3px solid #ddd;
                     }
 
                     &:after {
@@ -190,7 +190,7 @@ export default {
                             top: 0;
                             width: calc((100% - var(--wives-count) * 132px) / 2 );
                             height: 16px;
-                            border-top: 1px solid #ddd;
+                            border-top: 3px solid #ddd;
                         }
                     }
                     // &:first-child:last-child {
@@ -229,7 +229,7 @@ export default {
                 position: absolute;
                 top: 50px;
                 right: 0;
-                height: 1px;
+                height: 3px;
                 margin-right: -32px;
                 width: 32px;
                 background-color: #ddd;
@@ -248,7 +248,7 @@ export default {
                         position: absolute;
                         top: 100px;
                         left: calc(50% + 16px);
-                        width: 1px;
+                        width: 3px;
                         height: calc(100% - 60px);
                         background-color: #ddd;
                     }
