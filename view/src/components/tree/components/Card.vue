@@ -8,7 +8,7 @@
         />
         <div class="vue-family-card__name">
             <a href="#" @click.prevent="click">
-                {{ fullname }}
+                {{ fullname }} 
             </a>
         </div>
         <base-form
@@ -30,7 +30,7 @@ export default {
     components: {
         BaseForm,
     },
-    emits: ['update-tree'],
+    emits: ["update-tree"],
     props: {
         fullname: String,
         image: String,
@@ -42,7 +42,9 @@ export default {
             memberViewd: {
                 id: "",
                 fullname: "",
-            }
+            },
+            memberGender: "",
+            memberDob: "",
         };
     },
     methods: {
@@ -51,8 +53,8 @@ export default {
             this.memberViewd = {
                 id: this.source.id,
                 fullname: this.source.fullname,
-                gender: this.source.gender
-            }
+                gender: this.source.gender,
+            };
             this.isShowMemberInfo = true;
         },
         closeMemberInfo() {
@@ -60,7 +62,27 @@ export default {
         },
         test() {
             console.log("test");
-        }
+        },
+        async getMemberDetail() {
+            console.log(this.source.id);
+            try {
+                const res = await this.$store.dispatch(
+                    "member/getMemberDetail",
+                    {
+                        member_id: this.source.id,
+                    }
+                );
+
+                console.log(res);
+                this.memberGender = res.gender
+                this.memberDob = res.date_of_birth
+            } catch (err) {
+                console.log(err);
+            }
+        },
+    },
+    mounted() {
+        this.getMemberDetail();
     },
 };
 </script>
